@@ -27,11 +27,12 @@ export default function ModernNavbar() {
   
   const navItems = [
     { name: "HOME", href: "#" },
-    { name: "TOURNAMENTS", href: "#tournaments" },
-    { name: "SCHEDULE", href: "#schedule" },
-    { name: "REWARDS", href: "#rewards" },
-    { name: "TEAMS", href: "#teams" },
-    { name: "NEWS", href: "#news" },
+    { name: "TOURNAMENTS", href: "#featured-games" },
+    { name: "ABOUT", href: "#about-tournament" },
+    { name: "SCHEDULE", href: "#upcoming-events" },
+    { name: "HOW TO JOIN", href: "#how-to-join" },
+    { name: "NEWS", href: "#latest-news" },
+    { name: "CONTACT", href: "#contact" },
   ];
   
   return (
@@ -83,7 +84,7 @@ export default function ModernNavbar() {
               transition={{ duration: 0.5, delay: 0.6 }}
             >
               <Link 
-                href="#register" 
+                href="#how-to-join" 
                 className="bg-neon-red hover:bg-red-700 transition-colors text-white py-2 px-6 rounded text-sm font-rajdhani font-bold"
               >
                 REGISTER
@@ -151,7 +152,7 @@ export default function ModernNavbar() {
                 className="mt-8"
               >
                 <Link 
-                  href="#register" 
+                  href="#how-to-join" 
                   className="bg-neon-red hover:bg-red-700 transition-colors text-white py-3 px-8 rounded text-base font-rajdhani font-bold"
                   onClick={() => setMobileMenuOpen(false)}
                 >

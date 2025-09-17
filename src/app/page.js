@@ -59,13 +59,27 @@ export default function Home() {
   return (
     <main className="relative bg-black text-white">
       <ModernNavbar />
-      <CallOfDutyStyleHero />
-      <FeaturedGames />
-      <AboutTournament />
-      <UpcomingEvents />
-      <HowToJoin />
-      <LatestNews />
-      <ContactSection />
+      <div id="home">
+        <CallOfDutyStyleHero />
+      </div>
+      <div id="featured-games">
+        <FeaturedGames />
+      </div>
+      <div id="about-tournament">
+        <AboutTournament />
+      </div>
+      <div id="upcoming-events">
+        <UpcomingEvents />
+      </div>
+      <div id="how-to-join">
+        <HowToJoin />
+      </div>
+      <div id="latest-news">
+        <LatestNews />
+      </div>
+      <div id="contact">
+        <ContactSection />
+      </div>
       <Footer />
       
       {/* Back to top button */}
