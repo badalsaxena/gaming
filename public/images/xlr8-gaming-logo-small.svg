@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="50" viewBox="0 0 150 50">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1" result="blur" />
+      <feFlood flood-color="#ff0000" flood-opacity="0.5" result="color" />
+      <feComposite in="color" in2="blur" operator="in" result="glow" />
+      <feMerge>
+        <feMergeNode in="glow" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="150" height="50" fill="transparent" />
+  
+  <!-- XLR8 Text -->
+  <text x="75" y="30" font-family="Arial, sans-serif" font-size="28" font-weight="900" fill="white" text-anchor="middle" filter="url(#glow)">XLR8</text>
+  
+  <!-- Gaming Text -->
+  <text x="75" y="45" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#cc0000" text-anchor="middle">GAMING</text>
+</svg>

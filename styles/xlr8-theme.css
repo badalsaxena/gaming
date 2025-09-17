@@ -1,0 +1,46 @@
+/* XLR8 Gaming Theme */
+
+:root {
+  --neon-red: #ff0000;
+  --neon-red-glow: rgba(255, 0, 0, 0.6);
+  --dark-red: #750000;
+  --dark-bg: #0a0000;
+  --xlr8-highlight: #ff3333;
+}
+
+.text-neon-red {
+  color: var(--neon-red);
+}
+
+.bg-neon-red {
+  background-color: var(--neon-red);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 15px var(--neon-red-glow);
+}
+
+.font-orbitron {
+  font-family: var(--font-orbitron);
+}
+
+.font-rajdhani {
+  font-family: var(--font-rajdhani);
+}
+
+.font-audiowide {
+  font-family: var(--font-audiowide);
+}
+
+.xlr8-border {
+  border: 1px solid var(--neon-red);
+  box-shadow: 0 0 15px var(--neon-red-glow);
+}
+
+.xlr8-gradient {
+  background: linear-gradient(135deg, var(--dark-red), #000000);
+}
+
+.bg-dark-bg {
+  background-color: var(--dark-bg);
+}
