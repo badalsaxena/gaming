@@ -96,20 +96,47 @@ export const scaleIn = {
 
 // Title component with animation
 export const SectionTitle = ({ title }) => {
+  const [isInView, setIsInView] = React.useState(false);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    const currentRef = ref.current;
+    if (!currentRef) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsInView(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px"
+      }
+    );
+
+    observer.observe(currentRef);
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
+
   return (
     <motion.h2
+      ref={ref}
       className="text-4xl md:text-5xl font-audiowide text-white mb-10 text-center relative inline-block"
       initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.5 }}
     >
       {title}
       <motion.span
         className="absolute -bottom-2 left-0 right-0 h-1 bg-neon-red"
         initial={{ width: 0, left: "50%" }}
-        whileInView={{ width: "100%", left: 0 }}
-        viewport={{ once: true }}
+        animate={isInView ? { width: "100%", left: 0 } : { width: 0, left: "50%" }}
         transition={{ duration: 0.7, delay: 0.3 }}
       />
     </motion.h2>
@@ -118,9 +145,41 @@ export const SectionTitle = ({ title }) => {
 
 // Button component with animation
 export const AnimatedButton = ({ text, className }) => {
+  const [isInView, setIsInView] = React.useState(false);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    const currentRef = ref.current;
+    if (!currentRef) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsInView(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px"
+      }
+    );
+
+    observer.observe(currentRef);
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
+
   return (
     <motion.button
+      ref={ref}
       className={`bg-neon-red text-white font-rajdhani font-bold py-3 px-8 rounded btn-hover-effect ${className || ""}`}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.5 }}
       whileHover={{ scale: 1.05, boxShadow: "0 0 15px var(--neon-red-glow)" }}
       whileTap={{ scale: 0.98 }}
     >
@@ -131,8 +190,37 @@ export const AnimatedButton = ({ text, className }) => {
 
 // Form input with animation
 export const AnimatedInput = ({ type, placeholder, className, name, required }) => {
+  const [isInView, setIsInView] = React.useState(false);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    const currentRef = ref.current;
+    if (!currentRef) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsInView(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px"
+      }
+    );
+
+    observer.observe(currentRef);
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
+
   return (
     <motion.input
+      ref={ref}
       type={type}
       name={name}
       placeholder={placeholder}
@@ -140,8 +228,7 @@ export const AnimatedInput = ({ type, placeholder, className, name, required }) 
       className={`w-full bg-black/50 border border-neon-red/30 text-white py-3 px-4 rounded font-rajdhani focus:border-neon-red focus:outline-none ${className || ""}`}
       whileFocus={{ borderColor: "var(--neon-red)", boxShadow: "0 0 8px var(--neon-red-glow)" }}
       initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.5 }}
     />
   );
@@ -149,8 +236,37 @@ export const AnimatedInput = ({ type, placeholder, className, name, required }) 
 
 // Text area with animation
 export const AnimatedTextarea = ({ placeholder, className, name, required, rows = 4 }) => {
+  const [isInView, setIsInView] = React.useState(false);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    const currentRef = ref.current;
+    if (!currentRef) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsInView(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px"
+      }
+    );
+
+    observer.observe(currentRef);
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
+
   return (
     <motion.textarea
+      ref={ref}
       name={name}
       placeholder={placeholder}
       required={required}
@@ -158,8 +274,7 @@ export const AnimatedTextarea = ({ placeholder, className, name, required, rows 
       className={`w-full bg-black/50 border border-neon-red/30 text-white py-3 px-4 rounded font-rajdhani focus:border-neon-red focus:outline-none resize-none ${className || ""}`}
       whileFocus={{ borderColor: "var(--neon-red)", boxShadow: "0 0 8px var(--neon-red-glow)" }}
       initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.5 }}
     />
   );

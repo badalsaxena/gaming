@@ -3,8 +3,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import { SectionTitle } from "./AnimationUtils.js";
 import Image from "next/image";
+import { useFadeInAnimation, useZoomInAnimation } from "./hooks/useRepeatingAnimation";
 
 export default function LatestNews() {
+  const titleAnimation = useZoomInAnimation({ threshold: 0.2 });
+  const buttonAnimation = useFadeInAnimation({ threshold: 0.2 });
+  
   const news = [
     {
       title: "Season 5 Registrations Now Open",
@@ -43,13 +47,22 @@ export default function LatestNews() {
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex justify-between items-center mb-16">
-          <SectionTitle title="LATEST NEWS" />
+          {/* Use motion div with ref for the title */}
+          <motion.div 
+            ref={titleAnimation.ref}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={titleAnimation.animate}
+            transition={{ duration: 0.6 }}
+          >
+            <SectionTitle title="LATEST NEWS" />
+          </motion.div>
           
           <motion.button
+            ref={buttonAnimation.ref}
+            initial={{ opacity: 0, y: 20 }}
+            animate={buttonAnimation.animate}
+            transition={{ duration: 0.5 }}
             className="hidden md:flex items-center text-white/80 hover:text-neon-red transition-colors font-rajdhani group"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
             whileHover={{ x: 5 }}
           >
             VIEW ALL NEWS
@@ -68,10 +81,11 @@ export default function LatestNews() {
         
         {/* Mobile view all button */}
         <motion.div
-          className="mt-10 flex justify-center md:hidden"
+          ref={buttonAnimation.ref}
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={buttonAnimation.animate}
+          transition={{ duration: 0.5 }}
+          className="mt-10 flex justify-center md:hidden"
         >
           <button className="flex items-center text-white/80 hover:text-neon-red transition-colors font-rajdhani group">
             VIEW ALL NEWS
@@ -86,12 +100,14 @@ export default function LatestNews() {
 }
 
 const NewsCard = ({ news, index }) => {
+  const cardAnimation = useFadeInAnimation({ threshold: 0.1 });
+  
   return (
     <motion.article 
+      ref={cardAnimation.ref}
       className="bg-black/50 border border-neon-red/10 rounded-lg overflow-hidden h-full flex flex-col group"
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      animate={cardAnimation.animate}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ y: -5 }}
     >

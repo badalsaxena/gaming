@@ -17,7 +17,7 @@
 }
 
 .shadow-glow {
-  box-shadow: 0 0 15px var(--neon-red-glow);
+  box-shadow: 0 0 15px var(--neon-red-glow), 0 0 5px var(--neon-red);
 }
 
 .font-orbitron {
@@ -43,4 +43,19 @@
 
 .bg-dark-bg {
   background-color: var(--dark-bg);
+}
+
+/* Gaming-style nav link effects */
+@keyframes glitch {
+  0% { text-shadow: 0.05em 0 0 var(--neon-red), -0.05em -0.025em 0 rgba(0, 255, 255, 0.75); }
+  14% { text-shadow: 0.05em 0 0 var(--neon-red), -0.05em -0.025em 0 rgba(0, 255, 255, 0.75); }
+  15% { text-shadow: -0.05em -0.025em 0 var(--neon-red), 0.025em 0.025em 0 rgba(0, 255, 255, 0.75); }
+  49% { text-shadow: -0.05em -0.025em 0 var(--neon-red), 0.025em 0.025em 0 rgba(0, 255, 255, 0.75); }
+  50% { text-shadow: 0.025em 0.05em 0 var(--neon-red), 0.05em 0 0 rgba(0, 255, 255, 0.75); }
+  99% { text-shadow: 0.025em 0.05em 0 var(--neon-red), 0.05em 0 0 rgba(0, 255, 255, 0.75); }
+  100% { text-shadow: -0.025em 0 0 var(--neon-red), -0.025em -0.025em 0 rgba(0, 255, 255, 0.75); }
+}
+
+.nav-glitch-effect:hover {
+  animation: glitch 0.3s linear infinite;
 }

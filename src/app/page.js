@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useEffect } from 'react';
+import Link from 'next/link';
 import ModernNavbar from '../../components/ModernNavbar';
 import CallOfDutyStyleHero from '../../components/CallOfDutyStyleHero';
 import FeaturedGames from '../../components/FeaturedGames';

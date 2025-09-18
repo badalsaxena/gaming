@@ -68,9 +68,11 @@ export default function ModernNavbar() {
                 >
                   <Link 
                     href={item.href}
-                    className="text-white hover:text-neon-red transition-colors text-sm font-audiowide tracking-wider"
+                    className="text-white hover:text-neon-red transition-colors text-sm font-audiowide tracking-wider relative group nav-glitch-effect"
                   >
                     {item.name}
+                    <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-neon-red group-hover:w-full transition-all duration-300 ease-in-out shadow-glow"></span>
+                    <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-white/30 group-hover:w-3/4 transition-all duration-500 ease-out delay-100"></span>
                   </Link>
                 </motion.div>
               ))}
@@ -84,10 +86,10 @@ export default function ModernNavbar() {
               transition={{ duration: 0.5, delay: 0.6 }}
             >
               <Link 
-                href="#how-to-join" 
-                className="bg-neon-red hover:bg-red-700 transition-colors text-white py-2 px-6 rounded text-sm font-rajdhani font-bold"
+                href="/login" 
+                className="bg-neon-red text-white py-2 px-6 rounded text-sm font-rajdhani font-bold"
               >
-                REGISTER
+                LOGIN
               </Link>
             </motion.div>
             
@@ -137,10 +139,11 @@ export default function ModernNavbar() {
                 >
                   <Link 
                     href={item.href}
-                    className="text-white hover:text-neon-red transition-colors text-xl font-audiowide tracking-wider"
+                    className="text-white hover:text-neon-red transition-colors text-xl font-audiowide tracking-wider relative group"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.name}
+                    <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-neon-red group-hover:w-full transition-all duration-300 ease-in-out shadow-glow"></span>
                   </Link>
                 </motion.div>
               ))}
@@ -152,11 +155,11 @@ export default function ModernNavbar() {
                 className="mt-8"
               >
                 <Link 
-                  href="#how-to-join" 
-                  className="bg-neon-red hover:bg-red-700 transition-colors text-white py-3 px-8 rounded text-base font-rajdhani font-bold"
+                  href="/login" 
+                  className="bg-neon-red text-white py-3 px-8 rounded text-base font-rajdhani font-bold"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  REGISTER NOW
+                  LOGIN
                 </Link>
               </motion.div>
             </div>
