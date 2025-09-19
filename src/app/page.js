@@ -12,7 +12,7 @@ import HowToJoin from '../../components/HowToJoin';
 import LatestNews from '../../components/LatestNews';
 import ContactSection from '../../components/ContactSection';
 import Footer from '../../components/Footer';
-import { useScrollAnimation } from '../../components/AnimationUtils.js';
+import { useScrollAnimation } from '../../components/AnimationUtils.tsx';
 import { motion } from 'framer-motion';
 
 export default function Home() {

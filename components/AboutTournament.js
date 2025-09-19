@@ -4,7 +4,7 @@ import React from "react";
 import "@fontsource/orbitron/700.css";
 import "@fontsource/rajdhani/700.css";
 import "@fontsource/audiowide/400.css";
-import { SectionTitle, AnimatedSection, StaggerContainer, fadeInUp, fadeInLeft, fadeInRight, scaleIn, AnimatedButton } from "./AnimationUtils.js";
+import { SectionTitle, AnimatedSection, StaggerContainer, fadeInUp, fadeInLeft, fadeInRight, scaleIn, AnimatedButton } from "./AnimationUtils.tsx";
 
 export default function AboutTournament() {
   const features = [

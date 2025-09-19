@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { SectionTitle } from "./AnimationUtils.js";
+import { SectionTitle } from "./AnimationUtils.tsx";
 import Image from "next/image";
 
 export default function FeaturedGames() {

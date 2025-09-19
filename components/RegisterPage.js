@@ -69,7 +69,8 @@ const RegisterForm = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    agreeToTerms: false
+    agreeToTerms: false,
+    registerType: 'user' // Default to user registration
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -145,7 +146,8 @@ const RegisterForm = () => {
       const newUser = {
         username: formState.username,
         email: formState.email,
-        password: formState.password
+        password: formState.password,
+        role: formState.registerType // Set the role based on registration type
       };
       
       // Simulate API call
@@ -344,6 +346,45 @@ const RegisterForm = () => {
                   </motion.p>
                 )}
               </AnimatePresence>
+            </div>
+          </motion.div>
+          
+          {/* Register Type Selection */}
+          <motion.div className="mb-4" variants={itemVariants}>
+            <label className="block text-white/80 font-rajdhani text-sm mb-2">
+              REGISTER AS
+            </label>
+            <div className="grid grid-cols-2 gap-4">
+              <div 
+                className={`cursor-pointer rounded-md p-3 flex items-center justify-center transition-all ${
+                  formState.registerType === 'user' 
+                  ? 'bg-neon-red text-white' 
+                  : 'bg-black/50 border border-neon-red/30 text-white/70 hover:bg-black/70'
+                }`}
+                onClick={() => setFormState({...formState, registerType: 'user'})}
+              >
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-rajdhani font-semibold">USER</span>
+                </div>
+              </div>
+              <div 
+                className={`cursor-pointer rounded-md p-3 flex items-center justify-center transition-all ${
+                  formState.registerType === 'admin' 
+                  ? 'bg-neon-red text-white' 
+                  : 'bg-black/50 border border-neon-red/30 text-white/70 hover:bg-black/70'
+                }`}
+                onClick={() => setFormState({...formState, registerType: 'admin'})}
+              >
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-rajdhani font-semibold">ADMIN</span>
+                </div>
+              </div>
             </div>
           </motion.div>
           

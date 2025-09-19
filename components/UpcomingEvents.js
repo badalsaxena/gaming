@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import Image from "next/image";
-import { SectionTitle, AnimatedSection, StaggerContainer, fadeInUp, fadeInLeft, fadeInRight, AnimatedButton } from "./AnimationUtils.js";
+import { SectionTitle, AnimatedSection, StaggerContainer, fadeInUp, fadeInLeft, fadeInRight, AnimatedButton } from "./AnimationUtils.tsx";
 
 export default function UpcomingEvents() {
   const events = [

@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import React from "react";
-import { SectionTitle, AnimatedSection, StaggerContainer, fadeInUp, scaleIn, AnimatedButton } from "./AnimationUtils.js";
+import { SectionTitle, AnimatedSection, StaggerContainer, fadeInUp, scaleIn, AnimatedButton } from "./AnimationUtils.tsx";
 
 export default function HowToJoin() {
   const steps = [

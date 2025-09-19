@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { SectionTitle, AnimatedSection, StaggerContainer, fadeInUp, scaleIn, AnimatedInput, AnimatedTextarea, AnimatedButton } from "./AnimationUtils.js";
+import { SectionTitle, AnimatedSection, StaggerContainer, fadeInUp, scaleIn, AnimatedInput, AnimatedTextarea, AnimatedButton } from "./AnimationUtils.tsx";
 
 export default function ContactSection() {
   return (

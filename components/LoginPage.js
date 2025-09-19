@@ -67,7 +67,8 @@ const LoginForm = () => {
   const [formState, setFormState] = useState({
     email: '',
     password: '',
-    rememberMe: false
+    rememberMe: false,
+    loginType: 'user' // Default to user login
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -126,24 +127,48 @@ const LoginForm = () => {
       // Check if user exists
       const user = users.find(u => u.email === formState.email && u.password === formState.password);
       
+      // Admin credentials for demo (fallback)
+      const isAdminCredentials = formState.email === 'admin@example.com' && formState.password === 'admin123';
+      
       setTimeout(() => {
         setIsLoading(false);
         
-        if (user) {
+        // Case 1: User login selected and valid user found with user role
+        const validUserLogin = formState.loginType === 'user' && user && (!user.role || user.role === 'user');
+        
+        // Case 2: Admin login selected and valid admin found with admin role or fallback admin credentials
+        const validAdminLogin = formState.loginType === 'admin' && 
+                              ((user && user.role === 'admin') || isAdminCredentials);
+        
+        if (validUserLogin || validAdminLogin) {
           // Login successful
           setIsSuccess(true);
           
           // Store logged in user info
-          localStorage.setItem('currentUser', JSON.stringify({
-            username: user.username,
-            email: user.email,
-            isLoggedIn: true
-          }));
+          if (validUserLogin) {
+            localStorage.setItem('currentUser', JSON.stringify({
+              username: user.username,
+              email: user.email,
+              isLoggedIn: true,
+              role: 'user'
+            }));
+          } else if (validAdminLogin) {
+            localStorage.setItem('currentUser', JSON.stringify({
+              username: user ? user.username : 'Admin',
+              email: user ? user.email : 'admin@example.com',
+              isLoggedIn: true,
+              role: 'admin'
+            }));
+          }
           
           // Redirect after success animation
           setTimeout(() => {
-            // Navigate to dashboard or home page
-            window.location.href = '/';
+            // Navigate to appropriate dashboard
+            if (formState.loginType === 'admin') {
+              window.location.href = '/admin-dashboard';
+            } else {
+              window.location.href = '/dashboard';
+            }
           }, 1500);
         } else {
           // Login failed
@@ -293,6 +318,45 @@ const LoginForm = () => {
                   </motion.p>
                 )}
               </AnimatePresence>
+            </div>
+          </motion.div>
+          
+          {/* Login Type Selection */}
+          <motion.div className="mb-6" variants={itemVariants}>
+            <label className="block text-white/80 font-rajdhani text-sm mb-2">
+              LOGIN AS
+            </label>
+            <div className="grid grid-cols-2 gap-4">
+              <div 
+                className={`cursor-pointer rounded-md p-3 flex items-center justify-center transition-all ${
+                  formState.loginType === 'user' 
+                  ? 'bg-neon-red text-white' 
+                  : 'bg-black/50 border border-neon-red/30 text-white/70 hover:bg-black/70'
+                }`}
+                onClick={() => setFormState({...formState, loginType: 'user'})}
+              >
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-rajdhani font-semibold">USER</span>
+                </div>
+              </div>
+              <div 
+                className={`cursor-pointer rounded-md p-3 flex items-center justify-center transition-all ${
+                  formState.loginType === 'admin' 
+                  ? 'bg-neon-red text-white' 
+                  : 'bg-black/50 border border-neon-red/30 text-white/70 hover:bg-black/70'
+                }`}
+                onClick={() => setFormState({...formState, loginType: 'admin'})}
+              >
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-rajdhani font-semibold">ADMIN</span>
+                </div>
+              </div>
             </div>
           </motion.div>
           
