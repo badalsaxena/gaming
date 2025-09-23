@@ -4,7 +4,8 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import ModernNavbar from '../../components/ModernNavbar';
-import CallOfDutyStyleHero from '../../components/CallOfDutyStyleHero';
+import FuturisticHero from '../../components/FuturisticHero';
+import TournamentCards from '../../components/TournamentCards';
 import FeaturedGames from '../../components/FeaturedGames';
 import AboutTournament from '../../components/AboutTournament';
 import UpcomingEvents from '../../components/UpcomingEvents';
@@ -13,6 +14,7 @@ import LatestNews from '../../components/LatestNews';
 import ContactSection from '../../components/ContactSection';
 import Footer from '../../components/Footer';
 import { useScrollAnimation } from '../../components/AnimationUtils.tsx';
+import { ScrollProgress } from '../../components/EnhancedAnimations';
 import { motion } from 'framer-motion';
 
 export default function Home() {
@@ -59,9 +61,13 @@ export default function Home() {
 
   return (
     <main className="relative bg-black text-white">
+      <ScrollProgress />
       <ModernNavbar />
       <div id="home">
-        <CallOfDutyStyleHero />
+        <FuturisticHero />
+      </div>
+      <div id="tournaments">
+        <TournamentCards />
       </div>
       <div id="featured-games">
         <FeaturedGames />

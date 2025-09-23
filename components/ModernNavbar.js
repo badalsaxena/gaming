@@ -1,21 +1,32 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function ModernNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
   
-  // Handle scroll effect
+  // Handle scroll effect and active section detection
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      if (offset > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
+      setScrolled(offset > 50);
+      
+      // Detect active section
+      const sections = ["home", "featured-games", "about-tournament", "upcoming-events", "how-to-join", "latest-news", "contact"];
+      const current = sections.find(section => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= 100 && rect.bottom >= 100;
+        }
+        return false;
+      });
+      
+      if (current) {
+        setActiveSection(current);
       }
     };
     
@@ -26,146 +37,135 @@ export default function ModernNavbar() {
   }, []);
   
   const navItems = [
-    { name: "HOME", href: "#" },
-    { name: "TOURNAMENTS", href: "#featured-games" },
-    { name: "ABOUT", href: "#about-tournament" },
-    { name: "SCHEDULE", href: "#upcoming-events" },
-    { name: "HOW TO JOIN", href: "#how-to-join" },
-    { name: "NEWS", href: "#latest-news" },
-    { name: "CONTACT", href: "#contact" },
+    { name: "HOME", href: "#home", id: "home" },
+    { name: "TOURNAMENTS", href: "#featured-games", id: "featured-games" },
+    { name: "SCHEDULE", href: "#upcoming-events", id: "upcoming-events" },
+    { name: "NEWS", href: "#latest-news", id: "latest-news" },
+    { name: "CONTACT", href: "#contact", id: "contact" },
   ];
   
   return (
     <>
       {/* Main navbar */}
-      <motion.header 
-        className={`fixed w-full top-0 left-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/90 backdrop-blur-md py-2' : 'bg-gradient-to-b from-black/90 to-transparent py-4'}`}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
+      <header 
+        className={`fixed w-full top-0 left-0 z-50 transition-all duration-500 ${
+          scrolled 
+            ? 'glass-strong py-2 border-b border-neon-red/30' 
+            : 'bg-gradient-to-b from-black/90 via-black/50 to-transparent py-4'
+        }`}
       >
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
             <Link href="/" className="z-50">
-              <Image 
-                src="/images/xlr8-gaming-logo-small.svg" 
-                alt="XLR8 Gaming" 
-                width={160} 
-                height={40} 
-                className="h-10 w-auto"
-              />
+              <div className="flex items-center space-x-3">
+                <Image 
+                  src="/images/xlr8-gaming-logo-small.svg" 
+                  alt="XLR8 Gaming" 
+                  width={180} 
+                  height={45} 
+                  className="h-12 w-auto"
+                />
+              </div>
             </Link>
             
             {/* Desktop Menu */}
-            <nav className="hidden lg:flex items-center space-x-8">
+            <nav className="hidden lg:flex items-center space-x-12">
               {navItems.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 * index }}
-                >
+                <div key={index} className="relative">
                   <Link 
                     href={item.href}
-                    className="text-white hover:text-neon-red transition-colors text-sm font-audiowide tracking-wider relative group nav-glitch-effect"
+                    className={`nav-link relative px-4 py-2 rounded-lg text-sm font-rajdhani font-semibold tracking-wider transition-all duration-300 ${
+                      activeSection === item.id
+                        ? 'text-neon-red bg-neon-red/10 shadow-glow'
+                        : 'text-white hover:text-neon-red'
+                    }`}
                   >
                     {item.name}
-                    <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-neon-red group-hover:w-full transition-all duration-300 ease-in-out shadow-glow"></span>
-                    <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-white/30 group-hover:w-3/4 transition-all duration-500 ease-out delay-100"></span>
                   </Link>
-                </motion.div>
+                </div>
               ))}
             </nav>
             
             {/* CTA button */}
-            <motion.div
-              className="hidden lg:block"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-            >
+            <div className="hidden lg:block">
               <Link 
                 href="/login" 
-                className="bg-neon-red text-white py-2 px-6 rounded text-sm font-rajdhani font-bold"
+                className="neon-button relative overflow-hidden rounded-lg"
               >
-                LOGIN
+                <span className="relative z-10">LOGIN</span>
               </Link>
-            </motion.div>
+            </div>
             
             {/* Mobile menu button */}
             <div className="lg:hidden">
               <button 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-white focus:outline-none z-50"
+                className="relative text-white focus:outline-none z-50 p-3 rounded-lg bg-black/30 border border-neon-red/30 hover:bg-neon-red/10 transition-all duration-300"
                 aria-label="Toggle menu"
               >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  className="h-6 w-6" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  {mobileMenuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
+                <div className="w-6 h-6 relative">
+                  <span
+                    className={`absolute top-1 left-0 w-6 h-0.5 bg-neon-red shadow-sm transform transition-all duration-300 ${
+                      mobileMenuOpen ? 'rotate-45 translate-y-2' : ''
+                    }`}
+                  />
+                  <span
+                    className={`absolute top-3 left-0 w-6 h-0.5 bg-neon-red shadow-sm transition-all duration-300 ${
+                      mobileMenuOpen ? 'opacity-0' : 'opacity-100'
+                    }`}
+                  />
+                  <span
+                    className={`absolute top-5 left-0 w-6 h-0.5 bg-neon-red shadow-sm transform transition-all duration-300 ${
+                      mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
+                    }`}
+                  />
+                </div>
               </button>
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
       
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            className="fixed inset-0 bg-black/95 z-40 lg:hidden flex flex-col"
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
-          >
-            <div className="flex flex-col items-center justify-center h-full space-y-8">
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-lg z-40 lg:hidden">
+          {/* Background pattern */}
+          <div className="absolute inset-0 bg-gradient-to-br from-neon-red/10 to-transparent">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,0,64,0.1),transparent_70%)]"></div>
+          </div>
+          
+          <div className="relative flex flex-col items-center h-full p-8 pt-24">
+            <div className="w-full max-w-sm space-y-4">
               {navItems.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 * index }}
-                >
+                <div key={index} className="group">
                   <Link 
                     href={item.href}
-                    className="text-white hover:text-neon-red transition-colors text-xl font-audiowide tracking-wider relative group"
+                    className={`block text-xl font-rajdhani font-semibold tracking-wider transition-all duration-300 px-6 py-4 rounded-lg border border-transparent hover:border-neon-red/30 text-center ${
+                      activeSection === item.id
+                        ? 'text-neon-red bg-neon-red/10 shadow-glow border-neon-red/50'
+                        : 'text-white hover:text-neon-red hover:bg-neon-red/5'
+                    }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.name}
-                    <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-neon-red group-hover:w-full transition-all duration-300 ease-in-out shadow-glow"></span>
                   </Link>
-                </motion.div>
+                </div>
               ))}
               
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.6 }}
-                className="mt-8"
-              >
+              <div className="mt-6">
                 <Link 
                   href="/login" 
-                  className="bg-neon-red text-white py-3 px-8 rounded text-base font-rajdhani font-bold"
+                  className="block bg-neon-red/10 text-neon-red border border-neon-red/50 hover:bg-neon-red/20 transition-all duration-300 text-lg px-8 py-4 rounded-lg font-rajdhani font-semibold tracking-wider text-center"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   LOGIN
                 </Link>
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
     </>
   );
 }
