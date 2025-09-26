@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function FuturisticHero() {
   const [glitchActive, setGlitchActive] = useState(false);
@@ -20,19 +21,38 @@ export default function FuturisticHero() {
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-black">
+      {/* Background Image using Next.js Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/a1.jpg"
+          alt="Gaming Background"
+          fill
+          className="object-cover"
+          priority
+          quality={100}
+        />
+      </div>
+      
       {/* Parallax Background Container */}
-      <div className="parallax-container absolute inset-0 z-0">
-        {/* Background Image with parallax effect */}
+      <div className="parallax-container absolute inset-0 z-10">
+        {/* Enhanced overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30"></div>
+        
+        {/* Enhanced grid overlay */}
         <div 
-          className="parallax-layer absolute inset-0 bg-black"
+          className="absolute inset-0 opacity-30"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(64, 64, 64, 0.5) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(64, 64, 64, 0.5) 1px, transparent 1px)
+              linear-gradient(rgba(255, 0, 64, 0.4) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 0, 64, 0.4) 1px, transparent 1px)
             `,
-            backgroundSize: '40px 40px'
+            backgroundSize: '50px 50px'
           }}
         />
+        
+        {/* Additional neon glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-t from-neon-red/10 via-transparent to-transparent"></div>
         
         {/* Animated overlay patterns */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent z-10"></div>
@@ -82,42 +102,50 @@ export default function FuturisticHero() {
       </div>
       
       {/* Main Content */}
-      <div className="relative z-20 flex flex-col h-full container mx-auto px-4 sm:px-6">
+      <div className="relative z-30 flex flex-col h-full container mx-auto px-4 sm:px-6">
         {/* Top navigation placeholder */}
         <div className="h-16 sm:h-20 md:h-24"></div>
         
         {/* Hero content - vertically centered */}
-        <div className="flex flex-col items-center justify-center flex-grow text-center py-8 sm:py-4 md:py-0">
+        <div className="flex flex-col items-center justify-center flex-grow text-center py-4 sm:py-6 md:py-8 max-w-6xl mx-auto">
           
-          {/* Main Title with Glitch Effect */}
+          {/* Main Logo with Animation Effects */}
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="mb-6 sm:mb-8"
+            initial={{ opacity: 0, y: 50, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
+            className="mb-6 sm:mb-8 mt-0 sm:mt-2 md:mt-4 lg:mt-6 xl:mt-8 flex items-center justify-center"
           >
-            <h1 
-              className={`glitch cyberpunk-text font-audiowide text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-wider mb-2 sm:mb-4 ${glitchActive ? 'glitch-hover' : ''}`}
-              data-text="XLR8"
+            <motion.div 
+              className="relative"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
             >
-              XLR8
-            </h1>
-            <motion.h2 
-              className="font-rajdhani text-xl sm:text-2xl md:text-4xl lg:text-5xl font-light tracking-[0.2em] text-white/90"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 1 }}
-            >
-              GAMING
-            </motion.h2>
+              <Image 
+                src="/images/loggo.png" 
+                alt="XLR8 Gaming" 
+                width={800} 
+                height={350}
+                className="h-32 sm:h-40 md:h-52 lg:h-64 xl:h-72 w-auto object-contain max-w-[400px] sm:max-w-[500px] md:max-w-[650px] lg:max-w-[750px] xl:max-w-[800px]"
+                priority
+                style={{
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5))'
+                }}
+              />
+              {/* Glow effect behind logo */}
+              <div className="absolute inset-0 bg-gradient-to-r from-neon-red/20 via-transparent to-neon-red/20 blur-xl -z-10 scale-110"></div>
+            </motion.div>
           </motion.div>
           
           {/* Subtitle */}
           <motion.p 
-            className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/80 font-rajdhani font-light max-w-xs sm:max-w-2xl lg:max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed px-4 sm:px-0"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl text-white font-rajdhani font-medium max-w-md sm:max-w-2xl lg:max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed px-4 sm:px-0 -mt-0 sm:-mt-1 md:-mt-2 lg:-mt-3 xl:-mt-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.2 }}
+            style={{
+              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)'
+            }}
           >
             Enter the ultimate gaming arena where legends are born and champions rise.
             <br className="hidden sm:block" />
@@ -126,21 +154,23 @@ export default function FuturisticHero() {
           
           {/* CTA Buttons */}
           <motion.div 
-            className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center mb-8 sm:mb-12 w-full max-w-md sm:max-w-none"
+            className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center mb-8 sm:mb-12 w-full max-w-md sm:max-w-none px-4 sm:px-0 -mt-0 sm:-mt-1 md:-mt-2 lg:-mt-3 xl:-mt-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.5 }}
           >
-            <motion.button
-              className="neon-button text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-rajdhani font-bold tracking-wider w-full sm:w-auto"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="relative z-10">REGISTER NOW</span>
-            </motion.button>
+            <Link href="/register">
+              <motion.button
+                className="bg-neon-red hover:bg-accent-red text-white text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-rajdhani font-bold tracking-wider w-full sm:w-auto transition-all duration-300 shadow-lg"
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                REGISTER NOW
+              </motion.button>
+            </Link>
             
             <motion.button
-              className="glass border-2 border-white/30 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-rajdhani font-bold tracking-wider hover:border-neon-red hover:text-neon-red transition-all duration-300 group w-full sm:w-auto"
+              className="bg-transparent border-2 border-white/50 hover:border-neon-red text-white hover:text-neon-red text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-rajdhani font-bold tracking-wider transition-all duration-300 group w-full sm:w-auto"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -153,7 +183,7 @@ export default function FuturisticHero() {
           
           {/* Stats Row */}
           <motion.div 
-            className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 text-center px-4 sm:px-0"
+            className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 text-center px-4 sm:px-0 -mt-0 sm:-mt-1 md:-mt-2 lg:-mt-3 xl:-mt-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.8 }}
@@ -165,7 +195,7 @@ export default function FuturisticHero() {
             ].map((stat, index) => (
               <motion.div 
                 key={index}
-                className="glass-red rounded-lg p-3 sm:p-4 min-w-[100px] sm:min-w-[120px] flex-1 max-w-[120px] sm:max-w-none"
+                className="bg-black/70 backdrop-blur-sm border border-white/20 rounded-lg p-3 sm:p-4 min-w-[100px] sm:min-w-[120px] flex-1 max-w-[120px] sm:max-w-[140px]"
                 whileHover={{ scale: 1.05, y: -2 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >

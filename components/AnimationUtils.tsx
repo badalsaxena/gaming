@@ -123,8 +123,10 @@ export const SectionTitle: React.FC<{title: string}> = ({ title }) => {
 };
 
 // Button component with animation
-export const AnimatedButton: React.FC<{text: string, className?: string}> = ({ text, className }) => {
-  return (
+import Link from "next/link";
+
+export const AnimatedButton: React.FC<{text: string, className?: string, href?: string}> = ({ text, className, href }) => {
+  const buttonContent = (
     <motion.button
       className={`bg-neon-red text-white font-rajdhani font-bold py-3 px-8 rounded btn-hover-effect ${className || ''}`}
       whileHover={{ scale: 1.05, boxShadow: "0 0 15px var(--neon-red-glow)" }}
@@ -133,6 +135,12 @@ export const AnimatedButton: React.FC<{text: string, className?: string}> = ({ t
       {text}
     </motion.button>
   );
+
+  if (href) {
+    return <Link href={href}>{buttonContent}</Link>;
+  }
+
+  return buttonContent;
 };
 
 // Form input with animation

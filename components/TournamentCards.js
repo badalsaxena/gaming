@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function TournamentCards() {
   const tournaments = [
@@ -166,15 +167,24 @@ export default function TournamentCards() {
               </div>
 
               {/* Action Button */}
-              <motion.button
-                className="w-full mt-6 neon-button py-3 px-6 rounded-lg font-rajdhani font-bold tracking-wider"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <span className="relative z-10">
-                  {tournament.status === 'Open' ? 'REGISTER NOW' : 'COMING SOON'}
-                </span>
-              </motion.button>
+              {tournament.status === 'Open' ? (
+                <Link href="/register">
+                  <motion.button
+                    className="w-full mt-6 neon-button py-3 px-6 rounded-lg font-rajdhani font-bold tracking-wider"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="relative z-10">REGISTER NOW</span>
+                  </motion.button>
+                </Link>
+              ) : (
+                <motion.button
+                  className="w-full mt-6 neon-button py-3 px-6 rounded-lg font-rajdhani font-bold tracking-wider opacity-50 cursor-not-allowed"
+                  disabled
+                >
+                  <span className="relative z-10">COMING SOON</span>
+                </motion.button>
+              )}
 
               {/* Decorative Elements */}
               <div className="absolute -top-2 -right-2 w-4 h-4 bg-neon-red rounded-full opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-500"></div>

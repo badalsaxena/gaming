@@ -43,7 +43,7 @@ const RepeatingAnimationNavbar = () => {
           >
             <Link href="#home" className="z-50">
               <Image 
-                src="/images/xlr8-gaming-logo-small.svg" 
+                src="/images/logo1.jpg" 
                 alt="XLR8 Gaming" 
                 width={160} 
                 height={40} 
@@ -178,7 +178,7 @@ const HeroSection = () => {
             }}
           >
             <Image 
-              src="/images/xlr8-gaming-logo.svg" 
+              src="/images/logo1.jpg" 
               alt="XLR8 Gaming Logo" 
               width={600} 
               height={400}
@@ -620,7 +620,7 @@ const Footer = () => {
         >
           <div className="mb-6 md:mb-0">
             <Image 
-              src="/images/xlr8-gaming-logo-small.svg" 
+              src="/images/logo1.jpg" 
               alt="XLR8 Gaming" 
               width={120} 
               height={30} 

@@ -3,32 +3,33 @@ import React from "react";
 import { motion } from "framer-motion";
 import { SectionTitle } from "./AnimationUtils.tsx";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function FeaturedGames() {
   const games = [
     {
-      title: "SHADOW STRIKE",
-      image: "/images/game1.svg",
-      platforms: ["PC", "XBOX", "PS5"],
+      title: "CALL OF DUTY",
+      image: "/images/cod%20(2).jpg",
+      platforms: ["PC", "XBOX", "PS5", "MOBILE"],
       prize: "$40,000",
       date: "OCT 15",
       description: "Compete in the ultimate tactical shooter. Test your skills in 5v5 team-based combat.",
     },
     {
-      title: "CYBER LEGENDS",
-      image: "/images/game2.svg", 
-      platforms: ["PC", "MOBILE"],
+      title: "FREE FIRE",
+      image: "/images/ff.jpg", 
+      platforms: ["MOBILE"],
       prize: "$25,000",
       date: "NOV 01",
-      description: "The most competitive MOBA tournament with strategic gameplay and team coordination.",
+      description: "The most competitive battle royale tournament with fast-paced action and survival gameplay.",
     },
     {
-      title: "ROYAL WARFARE",
-      image: "/images/game3.svg",
-      platforms: ["PC", "XBOX", "PS5", "MOBILE"],
+      title: "BGMI",
+      image: "/images/bgmi.jpg",
+      platforms: ["MOBILE"],
       prize: "$35,000",
       date: "OCT 22",
-      description: "Be the last player standing in this high-stakes battle royale competition.",
+      description: "Be the last player standing in this high-stakes battle royale competition on mobile.",
     }
   ];
 
@@ -41,7 +42,7 @@ export default function FeaturedGames() {
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col items-center mb-16">
-          <SectionTitle title="FEATURED TOURNAMENTS" />
+          <SectionTitle title="ACTIVE TOURNAMENTS" />
         </div>
         
         {/* Game cards grid */}
@@ -74,24 +75,33 @@ export default function FeaturedGames() {
 const GameCard = ({ game, index }) => {
   return (
     <motion.div 
-      className="bg-gradient-to-b from-black/80 to-black border border-neon-red/20 rounded-lg overflow-hidden group h-full flex flex-col"
+      className="bg-gradient-to-b from-gray-900/90 to-black border border-neon-red/30 rounded-xl overflow-hidden group h-full flex flex-col shadow-xl"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(255, 0, 0, 0.3)" }}
+      whileHover={{ 
+        y: -5, 
+        boxShadow: "0 20px 40px -5px rgba(255, 0, 64, 0.4)",
+        borderColor: "rgba(255, 0, 64, 0.6)"
+      }}
     >
       {/* Game image */}
-      <div className="relative h-52 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent z-10"></div>
+      <div className="relative h-52 overflow-hidden bg-gray-900">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10"></div>
         <Image
           src={game.image}
           alt={game.title}
-          fill
-          style={{ objectFit: 'cover' }}
-          className="group-hover:scale-105 transition-transform duration-700"
+          width={400}
+          height={208}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+          priority
+          onError={(e) => {
+            console.error('Image failed to load:', game.image);
+            e.target.src = '/images/game1.svg'; // fallback
+          }}
         />
-        <div className="absolute top-4 right-4 bg-neon-red py-1 px-3 text-sm font-rajdhani font-bold text-white z-20">
+        <div className="absolute top-4 right-4 bg-neon-red py-1 px-3 text-sm font-rajdhani font-bold text-white z-20 rounded">
           {game.date}
         </div>
       </div>
@@ -123,9 +133,11 @@ const GameCard = ({ game, index }) => {
             <span className="text-neon-red font-audiowide">{game.prize}</span>
           </div>
           
-          <button className="bg-neon-red hover:bg-red-700 transition-colors text-white py-2 px-4 rounded text-sm font-rajdhani font-bold">
-            REGISTER
-          </button>
+          <Link href="/register">
+            <button className="bg-neon-red hover:bg-red-700 transition-colors text-white py-2 px-4 rounded text-sm font-rajdhani font-bold">
+              REGISTER
+            </button>
+          </Link>
         </div>
       </div>
     </motion.div>

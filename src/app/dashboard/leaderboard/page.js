@@ -133,7 +133,7 @@ export default function LeaderboardPage() {
         id: 1,
         rank: 1,
         name: "XLR8 Esports",
-        logo: "/images/xlr8-gaming-logo-small.svg",
+        logo: "/images/logo1.jpg",
         country: "India",
         points: 18650,
         winRate: 75,

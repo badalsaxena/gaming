@@ -57,14 +57,15 @@ export default function ModernNavbar() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <Link href="/" className="z-50">
+            <Link href="/" className="z-50 flex-shrink-0">
               <div className="flex items-center space-x-3">
                 <Image 
-                  src="/images/xlr8-gaming-logo-small.svg" 
+                  src="/images/loggo.png" 
                   alt="XLR8 Gaming" 
-                  width={180} 
-                  height={45} 
-                  className="h-12 w-auto"
+                  width={250} 
+                  height={80} 
+                  className="h-16 sm:h-14 md:h-16 lg:h-18 w-auto object-contain max-w-[200px] sm:max-w-[220px] md:max-w-[250px] lg:max-w-[280px] brightness-110 contrast-110"
+                  priority
                 />
               </div>
             </Link>

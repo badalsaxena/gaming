@@ -511,7 +511,7 @@ export default function LoginPage() {
       >
         <Link href="/">
           <Image 
-            src="/images/xlr8-gaming-logo-small.svg" 
+            src="/images/logo1.jpg" 
             alt="XLR8 Gaming" 
             width={120} 
             height={30}

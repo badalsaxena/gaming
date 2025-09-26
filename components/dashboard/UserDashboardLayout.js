@@ -68,7 +68,7 @@ export default function UserDashboardLayout({ children }) {
       <div className="md:hidden bg-black border-b border-gray-800 p-4 flex justify-between items-center sticky top-0 z-50">
         <div className="flex items-center space-x-3">
           <Image 
-            src="/images/xlr8-gaming-logo-small.svg" 
+            src="/images/logo1.jpg" 
             alt="XLR8 Gaming" 
             width={40} 
             height={40} 
@@ -94,7 +94,7 @@ export default function UserDashboardLayout({ children }) {
           {/* Sidebar Header - Logo */}
           <div className="p-5 border-b border-gray-800 hidden md:flex items-center">
             <Image 
-              src="/images/xlr8-gaming-logo-small.svg" 
+              src="/images/logo1.jpg" 
               alt="XLR8 Gaming" 
               width={40} 
               height={40} 

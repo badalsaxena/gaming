@@ -5,7 +5,6 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import ModernNavbar from '../../components/ModernNavbar';
 import FuturisticHero from '../../components/FuturisticHero';
-import TournamentCards from '../../components/TournamentCards';
 import FeaturedGames from '../../components/FeaturedGames';
 import AboutTournament from '../../components/AboutTournament';
 import UpcomingEvents from '../../components/UpcomingEvents';
@@ -65,9 +64,6 @@ export default function Home() {
       <ModernNavbar />
       <div id="home">
         <FuturisticHero />
-      </div>
-      <div id="tournaments">
-        <TournamentCards />
       </div>
       <div id="featured-games">
         <FeaturedGames />
