@@ -1,30 +1,34 @@
 "use client";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
-// Enhanced scroll-triggered animations hook
-export const useScrollAnimation = () => {
+// Custom hook for scroll-based animations
+export const useScrollAnimation = (threshold = 0.1) => {
+  const [elementTop, setElementTop] = useState(0);
+  const [clientHeight, setClientHeight] = useState(0);
+  const ref = useRef();
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '50px'
+    const element = ref.current;
+    if (!element) return;
+
+    setElementTop(element.offsetTop);
+    setClientHeight(window.innerHeight);
+
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      const rate = scrolled / (elementTop + element.offsetHeight - clientHeight);
+      
+      if (rate > threshold) {
+        element.classList.add('animate-in');
       }
-    );
+    };
 
-    // Observe all scroll animation elements
-    const elements = document.querySelectorAll('.scroll-fade-in, .scroll-slide-left, .scroll-slide-right');
-    elements.forEach((el) => observer.observe(el));
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [threshold]);
 
-    return () => observer.disconnect();
-  }, []);
+  return ref;
 };
 
 // Parallax container component
@@ -157,7 +161,7 @@ export const GlitchText = ({ children, className = "", dataText = "" }) => {
 };
 
 // Animated button with hover effects
-export const AnimatedButton = ({ children, className = "", variant = "primary", onClick, ...props }) => {
+export const AnimatedButton = ({ children, className = "", variant = "primary", onClick, href, ...props }) => {
   const baseClasses = "relative overflow-hidden font-rajdhani font-bold tracking-wider transition-all duration-300";
   
   const variants = {
@@ -166,7 +170,7 @@ export const AnimatedButton = ({ children, className = "", variant = "primary", 
     ghost: "bg-transparent border-2 border-neon-red text-neon-red hover:bg-neon-red hover:text-white"
   };
 
-  return (
+  const buttonElement = (
     <motion.button
       className={`${baseClasses} ${variants[variant]} ${className}`}
       whileHover={{ scale: 1.05, y: -2 }}
@@ -177,6 +181,16 @@ export const AnimatedButton = ({ children, className = "", variant = "primary", 
       <span className="relative z-10">{children}</span>
     </motion.button>
   );
+
+  if (href) {
+    return (
+      <a href={href}>
+        {buttonElement}
+      </a>
+    );
+  }
+
+  return buttonElement;
 };
 
 // Magnetic hover effect
@@ -259,18 +273,4 @@ export const TextReveal = ({ children, className = "", delay = 0 }) => {
       {children}
     </motion.div>
   );
-};
-
-export default {
-  useScrollAnimation,
-  ParallaxContainer,
-  RevealAnimation,
-  StaggerContainer,
-  StaggerItem,
-  FloatingElement,
-  GlitchText,
-  AnimatedButton,
-  MagneticWrapper,
-  ScrollProgress,
-  TextReveal
 };

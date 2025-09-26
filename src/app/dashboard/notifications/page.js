@@ -48,441 +48,311 @@ export default function NotificationsPage() {
       type: 'system',
       title: 'Account Verification',
       message: 'Your account has been successfully verified. You now have access to all tournaments.',
-      timestamp: '2025-09-10T09:45:00',
+      timestamp: '2025-09-12T09:00:00',
       read: true,
-      action: 'View Profile',
-      actionLink: '/dashboard/profile'
+      action: 'Continue',
+      actionLink: '/dashboard'
     },
     {
       id: 5,
-      type: 'tournament',
-      title: 'Tournament Registration Successful',
-      message: 'You have successfully registered for PUBG Mobile Cup. The tournament starts on 27th September, 2025.',
-      timestamp: '2025-09-05T18:20:00',
-      read: true,
-      action: 'View Tournament',
-      actionLink: '/dashboard/tournaments/2'
+      type: 'achievement',
+      title: 'New Achievement Unlocked',
+      message: 'You have unlocked the "First Victory" achievement for winning your first tournament match!',
+      timestamp: '2025-09-10T18:45:00',
+      read: false,
+      action: 'View Achievements',
+      actionLink: '/dashboard/profile'
     },
     {
       id: 6,
-      type: 'payment',
-      title: 'Payment Successful',
-      message: 'Your payment of ₹500 for tournament registration has been processed successfully.',
-      timestamp: '2025-09-05T18:15:00',
+      type: 'tournament',
+      title: 'Tournament Registration Open',
+      message: 'Registration is now open for the BGMI Mobile Masters Championship. Early bird discount available!',
+      timestamp: '2025-09-08T12:00:00',
       read: true,
-      action: 'View Receipt',
-      actionLink: '/dashboard/wallet'
+      action: 'Register Now',
+      actionLink: '/dashboard/tournaments'
     },
     {
       id: 7,
-      type: 'system',
-      title: 'Platform Maintenance',
-      message: 'XLR8 Gaming platform will undergo maintenance on 30th September from 2:00 AM to 5:00 AM IST.',
-      timestamp: '2025-09-01T12:00:00',
-      read: false,
-      action: null,
-      actionLink: null
+      type: 'team',
+      title: 'Team Match Result',
+      message: 'Your team "Phoenix Squad" won the match against "Thunder Wolves" in the Call of Duty tournament!',
+      timestamp: '2025-09-07T20:30:00',
+      read: true,
+      action: 'View Results',
+      actionLink: '/dashboard/tournaments'
     },
     {
       id: 8,
-      type: 'tournament',
-      title: 'Match Schedule Updated',
-      message: 'The schedule for your upcoming CS:GO Championship match has been updated. Please check the tournament details.',
-      timestamp: '2025-08-28T16:30:00',
+      type: 'payment',
+      title: 'Withdrawal Processed',
+      message: 'Your withdrawal request of ₹5,000 has been processed and will be credited to your bank account within 24 hours.',
+      timestamp: '2025-09-05T11:15:00',
       read: true,
-      action: 'View Schedule',
-      actionLink: '/dashboard/tournaments/3'
+      action: 'View Transaction',
+      actionLink: '/dashboard/wallet'
+    },
+    {
+      id: 9,
+      type: 'system',
+      title: 'Maintenance Notice',
+      message: 'Scheduled maintenance will occur tonight from 2:00 AM to 4:00 AM IST. All services will be temporarily unavailable.',
+      timestamp: '2025-09-03T16:00:00',
+      read: false,
+      action: 'Learn More',
+      actionLink: '/support'
+    },
+    {
+      id: 10,
+      type: 'achievement',
+      title: 'Ranking Up',
+      message: 'Congratulations! You have been promoted to Silver League based on your recent performance.',
+      timestamp: '2025-09-01T14:20:00',
+      read: true,
+      action: 'View Profile',
+      actionLink: '/dashboard/profile'
     }
   ];
 
   // Filter notifications
   const filteredNotifications = allNotifications.filter(notification => {
-    // Filter by type
-    const matchesType = typeFilter === 'all' || notification.type === typeFilter;
-    
-    // Filter by read status
-    const matchesReadStatus = 
-      readFilter === 'all' || 
+    const typeMatch = typeFilter === 'all' || notification.type === typeFilter;
+    const readMatch = readFilter === 'all' || 
       (readFilter === 'read' && notification.read) || 
       (readFilter === 'unread' && !notification.read);
-    
-    return matchesType && matchesReadStatus;
+    return typeMatch && readMatch;
   });
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.4 }
-    }
-  };
-
-  // Get notification icon by type
+  // Get notification icon based on type
   const getNotificationIcon = (type) => {
-    switch(type) {
+    switch (type) {
       case 'tournament':
-        return <FaTrophy className="text-blue-500" />;
+        return <FaTrophy className="text-yellow-500" />;
       case 'payment':
         return <FaWallet className="text-green-500" />;
       case 'team':
-        return <FaUsers className="text-purple-500" />;
+        return <FaUsers className="text-blue-500" />;
       case 'system':
-        return <FaCog className="text-yellow-500" />;
+        return <FaCog className="text-gray-500" />;
+      case 'achievement':
+        return <FaCheckCircle className="text-purple-500" />;
       default:
-        return <FaBell className="text-gray-500" />;
+        return <FaBell className="text-neon-red" />;
     }
   };
 
-  // Format timestamp to relative time
-  const formatRelativeTime = (timestamp) => {
+  // Format timestamp
+  const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffMs = now - date;
-    const diffSecs = Math.floor(diffMs / 1000);
-    const diffMins = Math.floor(diffSecs / 60);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
+    const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
     
-    if (diffSecs < 60) {
-      return 'Just now';
-    } else if (diffMins < 60) {
-      return `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
-    } else if (diffHours < 24) {
-      return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-    } else if (diffDays < 7) {
-      return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-    } else {
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
-      });
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
+    return date.toLocaleDateString();
+  };
+
+  // Get notification type color
+  const getTypeColor = (type) => {
+    switch (type) {
+      case 'tournament':
+        return 'bg-yellow-500/20 text-yellow-500';
+      case 'payment':
+        return 'bg-green-500/20 text-green-500';
+      case 'team':
+        return 'bg-blue-500/20 text-blue-500';
+      case 'system':
+        return 'bg-gray-500/20 text-gray-500';
+      case 'achievement':
+        return 'bg-purple-500/20 text-purple-500';
+      default:
+        return 'bg-neon-red/20 text-neon-red';
     }
-  };
-
-  // Mark all notifications as read
-  const markAllAsRead = () => {
-    // In a real app, this would update the backend
-    alert('All notifications marked as read');
-  };
-
-  // Mark single notification as read
-  const markAsRead = (id) => {
-    // In a real app, this would update the backend
-    alert(`Notification ${id} marked as read`);
-  };
-
-  // Clear all notifications
-  const clearAllNotifications = () => {
-    // In a real app, this would update the backend
-    alert('All notifications cleared');
   };
 
   return (
     <UserDashboardLayout>
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="space-y-8"
-      >
-        {/* Page Header */}
-        <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-2xl font-audiowide mb-2">Notifications</h1>
-            <p className="text-gray-400">Stay updated with tournament alerts, team invites, and system messages</p>
-          </div>
-          <div className="mt-4 md:mt-0 flex space-x-3">
-            <button 
-              onClick={markAllAsRead}
-              className="bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg text-sm transition-colors flex items-center"
-            >
-              <FaCheckCircle className="mr-2" /> Mark All Read
-            </button>
-            <button 
-              onClick={clearAllNotifications}
-              className="bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg text-sm transition-colors flex items-center"
-            >
-              <FaTrash className="mr-2" /> Clear All
-            </button>
-          </div>
-        </motion.div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
+        <div className="container mx-auto px-4 py-8">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8"
+          >
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h1 className="text-4xl font-audiowide font-bold text-white mb-2">
+                  Notifications
+                </h1>
+                <p className="text-gray-400 font-rajdhani text-lg">
+                  Stay updated with your gaming activities
+                </p>
+              </div>
 
-        {/* Filters */}
-        <motion.div variants={itemVariants} className="flex flex-col md:flex-row gap-4">
-          <div className="flex-grow flex items-center bg-black/50 border border-gray-800 rounded-lg py-2 px-4">
-            <FaRegBell className="text-gray-400 mr-3" />
-            <div>
-              <span className="text-sm text-gray-400">You have </span>
-              <span className="font-medium">{allNotifications.filter(n => !n.read).length} unread </span>
-              <span className="text-sm text-gray-400">notifications</span>
+              {/* Notification Actions */}
+              <div className="flex items-center gap-4">
+                <button className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-300">
+                  <FaCheckCircle className="text-green-500" />
+                  Mark All Read
+                </button>
+                <button className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-300">
+                  <FaTrash className="text-red-500" />
+                  Clear All
+                </button>
+              </div>
             </div>
-          </div>
-          
-          <div className="relative">
-            <button 
-              className="flex items-center bg-black/50 border border-gray-800 rounded-lg py-2 px-4 focus:outline-none hover:bg-gray-900 w-full md:w-auto justify-between"
-              onClick={() => setFilterOpen(!filterOpen)}
-            >
-              <div className="flex items-center">
-                <FaFilter className="mr-2 text-gray-400" />
-                <span>Filters</span>
-              </div>
-              <FaChevronDown className={`ml-2 text-gray-400 transition-transform ${filterOpen ? 'transform rotate-180' : ''}`} />
-            </button>
-            
-            {filterOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-gray-900 border border-gray-800 rounded-lg shadow-lg z-10">
-                <div className="p-4">
-                  <h4 className="text-sm font-medium mb-2">Notification Type</h4>
-                  <div className="space-y-2">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="typeFilter"
-                        checked={typeFilter === 'all'}
-                        onChange={() => setTypeFilter('all')}
-                        className="mr-2"
-                      />
-                      <span>All Types</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="typeFilter"
-                        checked={typeFilter === 'tournament'}
-                        onChange={() => setTypeFilter('tournament')}
-                        className="mr-2"
-                      />
-                      <span>Tournament</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="typeFilter"
-                        checked={typeFilter === 'payment'}
-                        onChange={() => setTypeFilter('payment')}
-                        className="mr-2"
-                      />
-                      <span>Payment</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="typeFilter"
-                        checked={typeFilter === 'team'}
-                        onChange={() => setTypeFilter('team')}
-                        className="mr-2"
-                      />
-                      <span>Team</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="typeFilter"
-                        checked={typeFilter === 'system'}
-                        onChange={() => setTypeFilter('system')}
-                        className="mr-2"
-                      />
-                      <span>System</span>
-                    </label>
-                  </div>
-                </div>
-                
-                <div className="border-t border-gray-800 p-4">
-                  <h4 className="text-sm font-medium mb-2">Status</h4>
-                  <div className="space-y-2">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="readFilter"
-                        checked={readFilter === 'all'}
-                        onChange={() => setReadFilter('all')}
-                        className="mr-2"
-                      />
-                      <span>All</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="readFilter"
-                        checked={readFilter === 'read'}
-                        onChange={() => setReadFilter('read')}
-                        className="mr-2"
-                      />
-                      <span>Read</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="readFilter"
-                        checked={readFilter === 'unread'}
-                        onChange={() => setReadFilter('unread')}
-                        className="mr-2"
-                      />
-                      <span>Unread</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Notifications List */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-4"
-        >
-          {filteredNotifications.length === 0 ? (
-            <motion.div variants={itemVariants} className="text-center py-12 bg-black/50 border border-gray-800 rounded-lg">
-              <FaBell className="text-5xl text-gray-600 mx-auto mb-4" />
-              <h3 className="text-xl font-audiowide mb-2">No notifications</h3>
-              <p className="text-gray-400">You don't have any notifications at the moment</p>
-            </motion.div>
-          ) : (
-            filteredNotifications.map((notification) => (
+          {/* Filters */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mb-6"
+          >
+            <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg p-4">
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <FaFilter className="text-neon-red" />
+                  <span className="text-white font-rajdhani font-semibold">Filters:</span>
+                </div>
+
+                {/* Type Filter */}
+                <div className="flex items-center gap-2">
+                  <label className="text-gray-400 font-rajdhani">Type:</label>
+                  <select
+                    value={typeFilter}
+                    onChange={(e) => setTypeFilter(e.target.value)}
+                    className="bg-gray-700 text-white border border-gray-600 rounded-lg px-3 py-1 font-rajdhani focus:outline-none focus:border-neon-red"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="tournament">Tournament</option>
+                    <option value="payment">Payment</option>
+                    <option value="team">Team</option>
+                    <option value="system">System</option>
+                    <option value="achievement">Achievement</option>
+                  </select>
+                </div>
+
+                {/* Read Status Filter */}
+                <div className="flex items-center gap-2">
+                  <label className="text-gray-400 font-rajdhani">Status:</label>
+                  <select
+                    value={readFilter}
+                    onChange={(e) => setReadFilter(e.target.value)}
+                    className="bg-gray-700 text-white border border-gray-600 rounded-lg px-3 py-1 font-rajdhani focus:outline-none focus:border-neon-red"
+                  >
+                    <option value="all">All</option>
+                    <option value="unread">Unread</option>
+                    <option value="read">Read</option>
+                  </select>
+                </div>
+
+                {/* Results Count */}
+                <div className="ml-auto text-gray-400 font-rajdhani">
+                  {filteredNotifications.length} notification{filteredNotifications.length !== 1 ? 's' : ''}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Notifications List */}
+          <div className="space-y-4">
+            {filteredNotifications.length === 0 ? (
               <motion.div
-                key={notification.id}
-                variants={itemVariants}
-                className={`${
-                  notification.read ? 'bg-black/50' : 'bg-black/80 border-l-4 border-l-neon-red'
-                } border border-gray-800 rounded-lg p-4 transition-colors hover:bg-gray-900/30`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-center py-12"
               >
-                <div className="flex">
-                  <div className="mr-4 mt-1">
-                    <div className="bg-gray-800 p-2 rounded-lg">
+                <FaRegBell className="text-6xl text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-audiowide text-gray-400 mb-2">No Notifications Found</h3>
+                <p className="text-gray-500 font-rajdhani">
+                  No notifications match your current filter criteria.
+                </p>
+              </motion.div>
+            ) : (
+              filteredNotifications.map((notification, index) => (
+                <motion.div
+                  key={notification.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                  className={`bg-gray-800/50 backdrop-blur-sm border rounded-lg p-4 hover:bg-gray-800/70 transition-all duration-300 ${
+                    !notification.read ? 'border-neon-red/50 bg-neon-red/5' : 'border-gray-700'
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    {/* Notification Icon */}
+                    <div className="flex-shrink-0 w-10 h-10 bg-gray-700/50 rounded-full flex items-center justify-center">
                       {getNotificationIcon(notification.type)}
                     </div>
-                  </div>
-                  
-                  <div className="flex-grow">
-                    <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-                      <div>
-                        <h3 className="font-medium text-lg">{notification.title}</h3>
-                        <p className="text-gray-400 mt-1">{notification.message}</p>
-                      </div>
-                      <div className="text-sm text-gray-500 mt-2 md:mt-0 md:ml-4 md:text-right whitespace-nowrap">
-                        {formatRelativeTime(notification.timestamp)}
-                      </div>
-                    </div>
-                    
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {notification.action && (
-                        <a href={notification.actionLink} className="bg-neon-red hover:bg-red-700 text-white py-1 px-3 rounded text-xs font-medium transition-colors">
-                          {notification.action}
-                        </a>
-                      )}
-                      
-                      {!notification.read && (
-                        <button 
-                          onClick={() => markAsRead(notification.id)}
-                          className="bg-gray-800 hover:bg-gray-700 text-white py-1 px-3 rounded text-xs transition-colors"
-                        >
-                          Mark as Read
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))
-          )}
-        </motion.div>
 
-        {/* Notification Settings */}
-        <motion.div variants={itemVariants} className="bg-black/50 border border-gray-800 rounded-lg p-6">
-          <h3 className="text-lg font-audiowide mb-4">Notification Settings</h3>
-          
-          <div className="space-y-4">
-            <div className="flex justify-between items-center pb-3 border-b border-gray-800">
-              <div>
-                <h4 className="font-medium">Tournament Notifications</h4>
-                <p className="text-sm text-gray-400">Upcoming matches, results, and registrations</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-red"></div>
-              </label>
-            </div>
-            
-            <div className="flex justify-between items-center pb-3 border-b border-gray-800">
-              <div>
-                <h4 className="font-medium">Payment Notifications</h4>
-                <p className="text-sm text-gray-400">Deposits, withdrawals, and prize money</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-red"></div>
-              </label>
-            </div>
-            
-            <div className="flex justify-between items-center pb-3 border-b border-gray-800">
-              <div>
-                <h4 className="font-medium">Team Notifications</h4>
-                <p className="text-sm text-gray-400">Team invites and updates</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-red"></div>
-              </label>
-            </div>
-            
-            <div className="flex justify-between items-center pb-3 border-b border-gray-800">
-              <div>
-                <h4 className="font-medium">System Notifications</h4>
-                <p className="text-sm text-gray-400">Platform updates and maintenance alerts</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-red"></div>
-              </label>
-            </div>
-            
-            <div className="flex justify-between items-center pb-3 border-b border-gray-800">
-              <div>
-                <h4 className="font-medium">Email Notifications</h4>
-                <p className="text-sm text-gray-400">Receive notifications via email</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-red"></div>
-              </label>
-            </div>
-            
-            <div className="flex justify-between items-center">
-              <div>
-                <h4 className="font-medium">Push Notifications</h4>
-                <p className="text-sm text-gray-400">Receive notifications on your device</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-neon-red"></div>
-              </label>
-            </div>
+                    {/* Notification Content */}
+                    <div className="flex-grow">
+                      <div className="flex items-start justify-between gap-4 mb-2">
+                        <div className="flex items-center gap-3">
+                          <h3 className="text-white font-audiowide font-semibold">
+                            {notification.title}
+                          </h3>
+                          <span className={`px-2 py-1 text-xs font-rajdhani font-semibold rounded-full ${getTypeColor(notification.type)}`}>
+                            {notification.type.charAt(0).toUpperCase() + notification.type.slice(1)}
+                          </span>
+                          {!notification.read && (
+                            <div className="w-2 h-2 bg-neon-red rounded-full"></div>
+                          )}
+                        </div>
+                        <span className="text-gray-400 font-rajdhani text-sm whitespace-nowrap">
+                          {formatTimestamp(notification.timestamp)}
+                        </span>
+                      </div>
+
+                      <p className="text-gray-300 font-rajdhani mb-3 leading-relaxed">
+                        {notification.message}
+                      </p>
+
+                      {/* Notification Actions */}
+                      <div className="flex items-center justify-between">
+                        <button className="text-neon-red hover:text-white font-rajdhani font-semibold transition-colors duration-300">
+                          {notification.action}
+                        </button>
+                        <div className="flex items-center gap-2">
+                          {!notification.read && (
+                            <button className="text-gray-400 hover:text-white text-sm font-rajdhani transition-colors duration-300">
+                              Mark as Read
+                            </button>
+                          )}
+                          <button className="text-gray-400 hover:text-red-400 transition-colors duration-300">
+                            <FaTrash className="text-sm" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))
+            )}
           </div>
-          
-          <div className="mt-6">
-            <button className="bg-gray-800 hover:bg-gray-700 text-white py-2 px-6 rounded-lg text-sm transition-colors">
-              Save Preferences
-            </button>
-          </div>
-        </motion.div>
-      </motion.div>
+
+          {/* Load More Button (if needed) */}
+          {filteredNotifications.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="text-center mt-8"
+            >
+              <button className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-rajdhani font-semibold transition-all duration-300">
+                Load More Notifications
+              </button>
+            </motion.div>
+          )}
+        </div>
+      </div>
     </UserDashboardLayout>
   );
 }
