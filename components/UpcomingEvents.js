@@ -17,7 +17,7 @@ export default function UpcomingEvents() {
       title: "BGMI Battle Royale Tournament",
       date: "November 5-7, 2025",
       prize: "$75,000",
-      image: "/images/bgmi.jpg",
+      image: "/images/mummy.jpg",
       description: "Epic mobile battle royale showdown. Survive, strategize, and conquer in this high-stakes competition.",
     }
   ];
@@ -52,9 +52,9 @@ export default function UpcomingEvents() {
                   src={event.image}
                   alt={event.title}
                   fill
-                  className="object-cover"
+                  className="object-cover brightness-110 contrast-110 saturate-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-br from-black/40 to-black/60"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/40"></div>
                 <div className="absolute top-0 right-0 bg-neon-red text-white px-4 py-2 font-audiowide z-10">
                   {event.prize}
                 </div>

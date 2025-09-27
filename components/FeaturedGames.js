@@ -9,7 +9,7 @@ export default function FeaturedGames() {
   const games = [
     {
       title: "CALL OF DUTY",
-      image: "/images/cod%20(2).jpg",
+      image: "/images/cod 24.jpg",
       platforms: ["PC", "XBOX", "PS5", "MOBILE"],
       prize: "$40,000",
       date: "OCT 15",
@@ -17,7 +17,7 @@ export default function FeaturedGames() {
     },
     {
       title: "FREE FIRE",
-      image: "/images/ff.jpg", 
+      image: "/images/Ff logo1.jpg", 
       platforms: ["MOBILE"],
       prize: "$25,000",
       date: "NOV 01",
@@ -25,7 +25,7 @@ export default function FeaturedGames() {
     },
     {
       title: "BGMI",
-      image: "/images/bgmi.jpg",
+      image: "/images/bgmi logo1.jpg",
       platforms: ["MOBILE"],
       prize: "$35,000",
       date: "OCT 22",
@@ -86,15 +86,14 @@ const GameCard = ({ game, index }) => {
         borderColor: "rgba(255, 0, 64, 0.6)"
       }}
     >
-      {/* Game image */}
+      {/* Game image - Full fit */}
       <div className="relative h-52 overflow-hidden bg-gray-900">
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10"></div>
         <Image
           src={game.image}
           alt={game.title}
-          width={400}
-          height={208}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-700"
           priority
           onError={(e) => {
             console.error('Image failed to load:', game.image);
