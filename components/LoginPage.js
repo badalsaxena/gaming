@@ -206,35 +206,6 @@ const LoginForm = () => {
             </motion.div>
           )}
         </AnimatePresence>
-        
-        {/* Login type switcher */}
-        <motion.div 
-          className="flex mb-6 bg-black/30 rounded-lg p-1"
-          variants={itemVariants}
-        >
-          <button
-            type="button"
-            onClick={() => setFormState({...formState, loginType: 'user'})}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-rajdhani font-semibold transition-all ${
-              formState.loginType === 'user' 
-                ? 'bg-neon-red text-white' 
-                : 'bg-black/50 border border-neon-red/30 text-white/70 hover:bg-black/70'
-            }`}
-          >
-            User Login
-          </button>
-          <button
-            type="button"
-            onClick={() => setFormState({...formState, loginType: 'admin'})}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-rajdhani font-semibold transition-all ${
-              formState.loginType === 'admin' 
-                ? 'bg-neon-red text-white' 
-                : 'bg-black/50 border border-neon-red/30 text-white/70 hover:bg-black/70'
-            }`}
-          >
-            Admin Login
-          </button>
-        </motion.div>
 
         {/* Error display */}
         <AnimatePresence>
@@ -327,7 +298,7 @@ const LoginForm = () => {
           <motion.button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-neon-red text-white py-3 rounded font-audiowide tracking-wider shadow-glow relative overflow-hidden group"
+            className="w-full bg-neon-red text-white py-3 rounded font-audiowide tracking-wider shadow-glow relative overflow-hidden group mb-4"
             variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"
@@ -357,6 +328,58 @@ const LoginForm = () => {
             </AnimatePresence>
             <span className="absolute inset-0 h-full w-full bg-gradient-to-r from-neon-red/0 via-white/20 to-neon-red/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-[200%] transition-all duration-1000 ease-out"></span>
           </motion.button>
+
+          {/* Login type switcher - Removed border and box */}
+          <motion.div 
+            className="w-full"
+            variants={itemVariants}
+          >
+            <div className="flex items-center justify-center gap-2 bg-black/40 rounded-lg p-2">
+              <motion.button
+                type="button"
+                onClick={() => setFormState({...formState, loginType: 'user'})}
+                className={`flex-1 py-2.5 px-4 rounded-md text-sm font-rajdhani font-semibold transition-all duration-300 ease-in-out relative overflow-hidden ${
+                  formState.loginType === 'user' 
+                    ? 'bg-neon-red text-white shadow-lg shadow-neon-red/30 border border-neon-red' 
+                    : 'bg-black/60 border border-neon-red/30 text-white/70 hover:bg-black/80 hover:text-white hover:border-neon-red/50'
+                }`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="relative z-10">User Login</span>
+                {formState.loginType === 'user' && (
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-neon-red/20 via-neon-red/10 to-neon-red/20"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '100%' }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  />
+                )}
+              </motion.button>
+              
+              <motion.button
+                type="button"
+                onClick={() => setFormState({...formState, loginType: 'admin'})}
+                className={`flex-1 py-2.5 px-4 rounded-md text-sm font-rajdhani font-semibold transition-all duration-300 ease-in-out relative overflow-hidden ${
+                  formState.loginType === 'admin' 
+                    ? 'bg-neon-red text-white shadow-lg shadow-neon-red/30 border border-neon-red' 
+                    : 'bg-black/60 border border-neon-red/30 text-white/70 hover:bg-black/80 hover:text-white hover:border-neon-red/50'
+                }`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="relative z-10">Admin Login</span>
+                {formState.loginType === 'admin' && (
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-neon-red/20 via-neon-red/10 to-neon-red/20"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '100%' }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  />
+                )}
+              </motion.button>
+            </div>
+          </motion.div>
         </form>
 
         {/* Footer Links */}

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import Image from 'next/image';
 
 // Animation variants
 const containerVariants = {
@@ -100,76 +99,88 @@ const RegisterForm = () => {
     
     // Username validation
     if (!formState.username) {
-      newErrors.username = "Username is required";
+      newErrors.username = 'Username is required';
     } else if (formState.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
+      newErrors.username = 'Username must be at least 3 characters';
     }
     
     // Email validation
     if (!formState.email) {
-      newErrors.email = "Email is required";
+      newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
-      newErrors.email = "Email address is invalid";
+      newErrors.email = 'Please enter a valid email address';
     }
     
     // Password validation
     if (!formState.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = 'Password is required';
     } else if (formState.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = 'Password must be at least 6 characters';
     }
     
     // Confirm password validation
     if (!formState.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (formState.confirmPassword !== formState.password) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formState.password !== formState.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
     }
     
-    // Terms and conditions
+    // Terms validation
     if (!formState.agreeToTerms) {
-      newErrors.agreeToTerms = "You must agree to the Terms and Conditions";
+      newErrors.agreeToTerms = 'You must agree to the terms and conditions';
     }
     
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors;
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (validateForm()) {
-      setIsLoading(true);
-      
-      // Save user to local storage for the demo
-      const newUser = {
-        username: formState.username,
-        email: formState.email,
-        password: formState.password,
-        role: formState.registerType // Set the role based on registration type
-      };
-      
-      // Simulate API call
-      setTimeout(() => {
-        // Store user in local storage
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        setIsLoading(false);
-        setIsSuccess(true);
-        
-        // Redirect after success animation
-        setTimeout(() => {
-          // Navigate to login page
-          window.location.href = '/login';
-        }, 1500);
-      }, 2000);
-    } else {
-      // Shake animation for invalid form
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
       setShake(true);
       setTimeout(() => setShake(false), 500);
+      return;
+    }
+    
+    setIsLoading(true);
+    setErrors({});
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Mock registration logic
+      const userData = {
+        id: Date.now(),
+        username: formState.username,
+        email: formState.email,
+        role: formState.registerType === 'admin' ? 'admin' : 'user'
+      };
+      
+      // Store user data
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+      localStorage.setItem('isLoggedIn', 'true');
+      
+      setIsSuccess(true);
+      
+      // Redirect after success
+      setTimeout(() => {
+        if (formState.registerType === 'admin') {
+          window.location.href = '/admin-dashboard';
+        } else {
+          window.location.href = '/dashboard';
+        }
+      }, 2000);
+      
+    } catch (error) {
+      setErrors({ general: 'Registration failed. Please try again.' });
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -180,14 +191,6 @@ const RegisterForm = () => {
       animate="visible"
       variants={containerVariants}
     >
-      {/* Title */}
-      <motion.h1 
-        className="text-4xl sm:text-5xl font-audiowide text-white text-center mb-8"
-        variants={titleVariants}
-      >
-        <span className="text-neon-red">JOIN</span> THE ELITE
-      </motion.h1>
-      
       {/* Card container */}
       <motion.div 
         className={`auth-card bg-black/60 backdrop-blur-md border border-neon-red/30 rounded-lg p-8 shadow-xl ${isSuccess ? 'shadow-green-500/50' : 'shadow-neon-red/20'}`}
@@ -207,279 +210,300 @@ const RegisterForm = () => {
             >
               <motion.div 
                 className="bg-black/80 rounded-full p-4"
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ 
-                  scale: [0.5, 1.2, 1], 
-                  opacity: 1,
-                  boxShadow: ["0 0 0px rgba(0, 255, 0, 0)", "0 0 30px rgba(0, 255, 0, 0.8)", "0 0 10px rgba(0, 255, 0, 0.5)"]
-                }}
-                transition={{ duration: 0.8, times: [0, 0.6, 1] }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2 }}
               >
-                <svg className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                </svg>
+                <motion.div 
+                  className="w-12 h-12 border-4 border-green-500 rounded-full flex items-center justify-center"
+                  initial={{ rotate: 0 }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                >
+                  ✓
+                </motion.div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-        
-        {/* Form */}
-        <motion.form 
-          onSubmit={handleSubmit}
-          className={shake ? 'animate-shake' : ''}
-          variants={itemVariants}
-        >
-          {/* Username field */}
+
+        {/* Error display */}
+        <AnimatePresence>
+          {errors.general && (
+            <motion.div 
+              className="bg-red-500/20 border border-red-500/50 rounded-md p-3 mb-4"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <p className="text-red-400 text-sm font-rajdhani">{errors.general}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <form onSubmit={handleSubmit} className={shake ? 'animate-shake' : ''}>
+          {/* Username Input */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className="block text-white/80 font-rajdhani text-sm mb-2" htmlFor="username">
-              USERNAME
+            <label className="block text-white/80 text-sm font-rajdhani mb-2">
+              Username
             </label>
-            <div className="relative">
-              <input
-                id="username"
-                name="username"
-                type="text"
-                value={formState.username}
-                onChange={handleChange}
-                className={`w-full bg-black/50 border ${errors.username ? 'border-red-500' : 'border-neon-red/30'} text-white py-3 px-4 rounded font-rajdhani focus:outline-none focus:ring-2 focus:ring-neon-red/50 transition-all`}
-                placeholder="Your gaming handle"
-              />
-              <AnimatePresence>
-                {errors.username && (
-                  <motion.p 
-                    className="text-red-500 text-xs font-rajdhani mt-1"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    {errors.username}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
+            <input
+              type="text"
+              name="username"
+              value={formState.username}
+              onChange={handleChange}
+              placeholder="Enter your username"
+              className={`w-full bg-black/50 border ${errors.username ? 'border-red-500' : 'border-neon-red/30'} text-white py-3 px-4 rounded font-rajdhani focus:outline-none focus:ring-2 focus:ring-neon-red/50 transition-all`}
+              disabled={isLoading}
+            />
+            <AnimatePresence>
+              {errors.username && (
+                <motion.p 
+                  className="text-red-400 text-sm mt-1 font-rajdhani"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  {errors.username}
+                </motion.p>
+              )}
+            </AnimatePresence>
           </motion.div>
-          
-          {/* Email field */}
+
+          {/* Email Input */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className="block text-white/80 font-rajdhani text-sm mb-2" htmlFor="email">
-              EMAIL
+            <label className="block text-white/80 text-sm font-rajdhani mb-2">
+              Email Address
             </label>
-            <div className="relative">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formState.email}
-                onChange={handleChange}
-                className={`w-full bg-black/50 border ${errors.email ? 'border-red-500' : 'border-neon-red/30'} text-white py-3 px-4 rounded font-rajdhani focus:outline-none focus:ring-2 focus:ring-neon-red/50 transition-all`}
-                placeholder="your-email@example.com"
-              />
-              <AnimatePresence>
-                {errors.email && (
-                  <motion.p 
-                    className="text-red-500 text-xs font-rajdhani mt-1"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    {errors.email}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
+            <input
+              type="email"
+              name="email"
+              value={formState.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              className={`w-full bg-black/50 border ${errors.email ? 'border-red-500' : 'border-neon-red/30'} text-white py-3 px-4 rounded font-rajdhani focus:outline-none focus:ring-2 focus:ring-neon-red/50 transition-all`}
+              disabled={isLoading}
+            />
+            <AnimatePresence>
+              {errors.email && (
+                <motion.p 
+                  className="text-red-400 text-sm mt-1 font-rajdhani"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  {errors.email}
+                </motion.p>
+              )}
+            </AnimatePresence>
           </motion.div>
-          
-          {/* Password field */}
+
+          {/* Password Input */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className="block text-white/80 font-rajdhani text-sm mb-2" htmlFor="password">
-              PASSWORD
+            <label className="block text-white/80 text-sm font-rajdhani mb-2">
+              Password
             </label>
-            <div className="relative">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={formState.password}
-                onChange={handleChange}
-                className={`w-full bg-black/50 border ${errors.password ? 'border-red-500' : 'border-neon-red/30'} text-white py-3 px-4 rounded font-rajdhani focus:outline-none focus:ring-2 focus:ring-neon-red/50 transition-all`}
-                placeholder="••••••••"
-              />
-              <AnimatePresence>
-                {errors.password && (
-                  <motion.p 
-                    className="text-red-500 text-xs font-rajdhani mt-1"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    {errors.password}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
+            <input
+              type="password"
+              name="password"
+              value={formState.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              className={`w-full bg-black/50 border ${errors.password ? 'border-red-500' : 'border-neon-red/30'} text-white py-3 px-4 rounded font-rajdhani focus:outline-none focus:ring-2 focus:ring-neon-red/50 transition-all`}
+              disabled={isLoading}
+            />
+            <AnimatePresence>
+              {errors.password && (
+                <motion.p 
+                  className="text-red-400 text-sm mt-1 font-rajdhani"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  {errors.password}
+                </motion.p>
+              )}
+            </AnimatePresence>
           </motion.div>
-          
-          {/* Confirm Password field */}
+
+          {/* Confirm Password Input */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className="block text-white/80 font-rajdhani text-sm mb-2" htmlFor="confirmPassword">
-              CONFIRM PASSWORD
+            <label className="block text-white/80 text-sm font-rajdhani mb-2">
+              Confirm Password
             </label>
-            <div className="relative">
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                value={formState.confirmPassword}
-                onChange={handleChange}
-                className={`w-full bg-black/50 border ${errors.confirmPassword ? 'border-red-500' : 'border-neon-red/30'} text-white py-3 px-4 rounded font-rajdhani focus:outline-none focus:ring-2 focus:ring-neon-red/50 transition-all`}
-                placeholder="••••••••"
-              />
-              <AnimatePresence>
-                {errors.confirmPassword && (
-                  <motion.p 
-                    className="text-red-500 text-xs font-rajdhani mt-1"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    {errors.confirmPassword}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formState.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm your password"
+              className={`w-full bg-black/50 border ${errors.confirmPassword ? 'border-red-500' : 'border-neon-red/30'} text-white py-3 px-4 rounded font-rajdhani focus:outline-none focus:ring-2 focus:ring-neon-red/50 transition-all`}
+              disabled={isLoading}
+            />
+            <AnimatePresence>
+              {errors.confirmPassword && (
+                <motion.p 
+                  className="text-red-400 text-sm mt-1 font-rajdhani"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  {errors.confirmPassword}
+                </motion.p>
+              )}
+            </AnimatePresence>
           </motion.div>
-          
-          {/* Register Type Selection */}
-          <motion.div className="mb-4" variants={itemVariants}>
-            <label className="block text-white/80 font-rajdhani text-sm mb-2">
-              REGISTER AS
-            </label>
-            <div className="grid grid-cols-2 gap-4">
-              <div 
-                className={`cursor-pointer rounded-md p-3 flex items-center justify-center transition-all ${
-                  formState.registerType === 'user' 
-                  ? 'bg-neon-red text-white' 
-                  : 'bg-black/50 border border-neon-red/30 text-white/70 hover:bg-black/70'
-                }`}
-                onClick={() => setFormState({...formState, registerType: 'user'})}
-              >
-                <div className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
-                  <span className="font-rajdhani font-semibold">USER</span>
-                </div>
-              </div>
-              <div 
-                className={`cursor-pointer rounded-md p-3 flex items-center justify-center transition-all ${
-                  formState.registerType === 'admin' 
-                  ? 'bg-neon-red text-white' 
-                  : 'bg-black/50 border border-neon-red/30 text-white/70 hover:bg-black/70'
-                }`}
-                onClick={() => setFormState({...formState, registerType: 'admin'})}
-              >
-                <div className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-                  </svg>
-                  <span className="font-rajdhani font-semibold">ADMIN</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-          
-          {/* Terms and Conditions checkbox */}
+
+          {/* Terms and Conditions Checkbox */}
           <motion.div className="mb-6" variants={itemVariants}>
             <div className="flex items-start">
-              <div className="flex items-center h-5">
-                <input
-                  id="agreeToTerms"
-                  name="agreeToTerms"
-                  type="checkbox"
-                  checked={formState.agreeToTerms}
-                  onChange={handleChange}
-                  className="h-4 w-4 border-neon-red/30 rounded bg-black/50 focus:ring-neon-red"
-                />
-              </div>
-              <div className="ml-3 text-sm">
-                <label htmlFor="agreeToTerms" className="text-white/70 font-rajdhani">
-                  I agree to the <Link href="#" className="text-neon-red hover:text-white">Terms and Conditions</Link>
-                </label>
-                <AnimatePresence>
-                  {errors.agreeToTerms && (
-                    <motion.p 
-                      className="text-red-500 text-xs font-rajdhani mt-1"
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                    >
-                      {errors.agreeToTerms}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
+              <input
+                type="checkbox"
+                name="agreeToTerms"
+                id="agreeToTerms"
+                checked={formState.agreeToTerms}
+                onChange={handleChange}
+                className="h-4 w-4 mt-1 border-neon-red/30 rounded bg-black/50 focus:ring-neon-red"
+                disabled={isLoading}
+              />
+              <label htmlFor="agreeToTerms" className="ml-2 text-white/70 text-sm font-rajdhani">
+                I agree to the{' '}
+                <Link href="/terms" className="text-neon-red hover:text-white transition-colors">
+                  Terms and Conditions
+                </Link>
+                {' '}and{' '}
+                <Link href="/privacy" className="text-neon-red hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>
+              </label>
+            </div>
+            <AnimatePresence>
+              {errors.agreeToTerms && (
+                <motion.p 
+                  className="text-red-400 text-sm mt-1 font-rajdhani"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  {errors.agreeToTerms}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Submit Button */}
+          <motion.button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-neon-red text-white py-3 rounded font-audiowide tracking-wider shadow-glow relative overflow-hidden group mb-4"
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <AnimatePresence mode="wait">
+              {isLoading ? (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex items-center justify-center"
+                >
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Creating Account...
+                </motion.div>
+              ) : (
+                <motion.span
+                  key="register"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  CREATE ACCOUNT
+                </motion.span>
+              )}
+            </AnimatePresence>
+            <span className="absolute inset-0 h-full w-full bg-gradient-to-r from-neon-red/0 via-white/20 to-neon-red/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-[200%] transition-all duration-1000 ease-out"></span>
+          </motion.button>
+
+          {/* Registration type switcher - MOVED HERE AFTER CREATE ACCOUNT BUTTON */}
+          <motion.div 
+            className="w-full"
+            variants={itemVariants}
+          >
+            <div className="flex items-center justify-center gap-2 bg-black/40 rounded-lg p-2">
+              <motion.button
+                type="button"
+                onClick={() => setFormState({...formState, registerType: 'user'})}
+                className={`flex-1 py-2.5 px-4 rounded-md text-sm font-rajdhani font-semibold transition-all duration-300 ease-in-out relative overflow-hidden ${
+                  formState.registerType === 'user' 
+                    ? 'bg-neon-red text-white shadow-lg shadow-neon-red/30 border border-neon-red' 
+                    : 'bg-black/60 border border-neon-red/30 text-white/70 hover:bg-black/80 hover:text-white hover:border-neon-red/50'
+                }`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="relative z-10">User Account</span>
+                {formState.registerType === 'user' && (
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-neon-red/20 via-neon-red/10 to-neon-red/20"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '100%' }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  />
+                )}
+              </motion.button>
+              
+              <motion.button
+                type="button"
+                onClick={() => setFormState({...formState, registerType: 'admin'})}
+                className={`flex-1 py-2.5 px-4 rounded-md text-sm font-rajdhani font-semibold transition-all duration-300 ease-in-out relative overflow-hidden ${
+                  formState.registerType === 'admin' 
+                    ? 'bg-neon-red text-white shadow-lg shadow-neon-red/30 border border-neon-red' 
+                    : 'bg-black/60 border border-neon-red/30 text-white/70 hover:bg-black/80 hover:text-white hover:border-neon-red/50'
+                }`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="relative z-10">Admin Account</span>
+                {formState.registerType === 'admin' && (
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-neon-red/20 via-neon-red/10 to-neon-red/20"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '100%' }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  />
+                )}
+              </motion.button>
             </div>
           </motion.div>
-          
-          {/* Submit button */}
-          <motion.div className="mb-6" variants={buttonVariants}>
-            <motion.button
-              type="submit"
-              className="w-full bg-neon-red text-white py-3 rounded font-audiowide tracking-wider shadow-glow relative overflow-hidden group"
-              disabled={isLoading}
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
-              {/* Button content */}
-              <span className="relative z-10 flex items-center justify-center">
-                {isLoading ? (
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                ) : null}
-                {isLoading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
-              </span>
-              
-              {/* Button glow effect */}
-              <span className="absolute inset-0 h-full w-full bg-gradient-to-r from-neon-red/0 via-white/20 to-neon-red/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-[200%] transition-all duration-1000 ease-out"></span>
-            </motion.button>
-          </motion.div>
-          
-          {/* Login link */}
-          <motion.div className="text-center" variants={itemVariants}>
-            <p className="text-white/70 font-rajdhani text-sm">
-              Already have an account?{' '}
-              <Link 
-                href="/login" 
-                className="text-neon-red hover:text-white transition-colors font-rajdhani"
-              >
-                Login
-              </Link>
-            </p>
-          </motion.div>
-        </motion.form>
+        </form>
+
+        {/* Footer Links */}
+        <motion.div className="mt-6 text-center" variants={itemVariants}>
+          <p className="text-white/60 text-sm font-rajdhani">
+            Already have an account?{' '}
+            <Link href="/login" className="text-neon-red hover:text-white transition-colors">
+              Sign in here
+            </Link>
+          </p>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
 };
 
-// Background components are reused from LoginPage
 // Background grid animation component
 const GridBackground = () => {
   return (
     <div className="absolute inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--dark-red)_0%,_black_70%)]"></div>
       <div className="absolute inset-0 bg-[linear-gradient(to_right,_rgba(255,0,0,0.05)_1px,_transparent_1px),_linear-gradient(to_bottom,_rgba(255,0,0,0.05)_1px,_transparent_1px)] bg-[size:20px_20px]"></div>
-      
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black to-transparent"></div>
-      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-black to-transparent"></div>
     </div>
   );
 };
 
-// Particles effect component
+// Floating particles effect
 const ParticlesEffect = () => {
   const [particles, setParticles] = useState([]);
   
@@ -533,28 +557,23 @@ const ParticlesEffect = () => {
 // Main Register Page component
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-black px-4 py-12 relative overflow-hidden">
       {/* Background effects */}
       <GridBackground />
       <ParticlesEffect />
       <div className="auth-bg-image"></div>
       
-      {/* Logo */}
+      {/* Title moved outside container */}
       <motion.div 
-        className="absolute top-8 left-8 z-10"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
+        className="text-center mb-8 z-10"
+        initial="hidden"
+        animate="visible"
+        variants={titleVariants}
       >
-        <Link href="/">
-          <Image 
-            src="/images/logo1.jpg" 
-            alt="XLR8 Gaming" 
-            width={120} 
-            height={30}
-            className="h-8 w-auto"
-          />
-        </Link>
+        <h1 className="text-4xl md:text-5xl font-audiowide text-white mb-2">
+          JOIN THE <span className="text-neon-red">BATTLE</span>
+        </h1>
+        <p className="text-white/60 font-rajdhani text-lg">Create your gaming account</p>
       </motion.div>
       
       {/* Register form container */}
