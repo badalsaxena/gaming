@@ -1,10 +1,10 @@
-
 "use client";
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import ModernNavbar from '../../components/ModernNavbar';
 import FuturisticHero from '../../components/FuturisticHero';
+import VideoSection from '../../components/VideoSection';
 import FeaturedGames from '../../components/FeaturedGames';
 import AboutTournament from '../../components/AboutTournament';
 import UpcomingEvents from '../../components/UpcomingEvents';
@@ -64,6 +64,10 @@ export default function Home() {
       <ModernNavbar />
       <div id="home">
         <FuturisticHero />
+      </div>
+      {/* Video section added between hero and featured games */}
+      <div id="video-section">
+        <VideoSection />
       </div>
       <div id="featured-games">
         <FeaturedGames />
