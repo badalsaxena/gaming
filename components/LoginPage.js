@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import Image from 'next/image';
+import { useAuth } from '../contexts/AuthContext';
 
 // Animation variants
 const containerVariants = {
@@ -74,6 +74,8 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [shake, setShake] = useState(false);
+  
+  const { login } = useAuth();
 
   // Handle input changes
   const handleChange = (e) => {
@@ -140,19 +142,14 @@ const LoginForm = () => {
         role: formState.loginType === 'admin' ? 'admin' : 'user'
       };
       
-      // Store user data
-      localStorage.setItem('currentUser', JSON.stringify(userData));
-      localStorage.setItem('isLoggedIn', 'true');
+      // Use AuthContext login method
+      login(userData);
       
       setIsSuccess(true);
       
-      // Redirect after success
+      // Redirect to HOME PAGE after success (like theesports.club)
       setTimeout(() => {
-        if (formState.loginType === 'admin') {
-          window.location.href = '/admin-dashboard';
-        } else {
-          window.location.href = '/dashboard';
-        }
+        window.location.href = '/';
       }, 2000);
       
     } catch (error) {
@@ -329,7 +326,7 @@ const LoginForm = () => {
             <span className="absolute inset-0 h-full w-full bg-gradient-to-r from-neon-red/0 via-white/20 to-neon-red/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-[200%] transition-all duration-1000 ease-out"></span>
           </motion.button>
 
-          {/* Login type switcher - Removed border and box */}
+          {/* Login type switcher - MOVED HERE AFTER LOGIN BUTTON */}
           <motion.div 
             className="w-full"
             variants={itemVariants}

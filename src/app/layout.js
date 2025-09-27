@@ -2,6 +2,7 @@ import { Orbitron, Audiowide, Rajdhani } from "next/font/google";
 import "./globals.css";
 import "../styles/xlr8-theme.css";
 import { metadata } from "./metadata";
+import { AuthProvider } from "../../contexts/AuthContext";
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -18,8 +19,10 @@ const audiowide = Audiowide({
 const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
+
+export { metadata };
 
 export default function RootLayout({ children }) {
   return (
@@ -28,10 +31,10 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body
-        className={`${orbitron.variable} ${audiowide.variable} ${rajdhani.variable} antialiased font-orbitron`}
-      >
-        {children}
+      <body className={`${orbitron.variable} ${audiowide.variable} ${rajdhani.variable} antialiased`}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

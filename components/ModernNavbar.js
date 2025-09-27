@@ -2,11 +2,14 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function ModernNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const { user, logout, isAuthenticated, isLoading } = useAuth();
   
   // Handle scroll effect and active section detection
   useEffect(() => {
@@ -35,6 +38,20 @@ export default function ModernNavbar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showUserMenu && !event.target.closest('.user-menu-container')) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showUserMenu]);
   
   const navItems = [
     { name: "HOME", href: "#home", id: "home" },
@@ -43,6 +60,16 @@ export default function ModernNavbar() {
     { name: "NEWS", href: "#latest-news", id: "latest-news" },
     { name: "CONTACT", href: "#contact", id: "contact" },
   ];
+
+  const handleLogout = () => {
+    logout();
+    setShowUserMenu(false);
+  };
+  
+  // Don't render anything while loading auth state
+  if (isLoading) {
+    return null;
+  }
   
   return (
     <>
@@ -88,14 +115,88 @@ export default function ModernNavbar() {
               ))}
             </nav>
             
-            {/* CTA button */}
-            <div className="hidden lg:block">
-              <Link 
-                href="/login" 
-                className="neon-button relative overflow-hidden rounded-lg"
-              >
-                <span className="relative z-10">LOGIN</span>
-              </Link>
+            {/* Auth Section - Desktop */}
+            <div className="hidden lg:flex items-center space-x-4">
+              {isAuthenticated ? (
+                // Logged In State
+                <div className="user-menu-container relative">
+                  <button
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    className="neon-button relative overflow-hidden rounded-lg flex items-center space-x-2"
+                  >
+                    <span className="relative z-10">MY PROFILE</span>
+                    <svg className={`w-4 h-4 transition-transform duration-200 ${showUserMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {/* Dropdown Menu */}
+                  {showUserMenu && (
+                    <div className="absolute right-0 mt-2 w-48 bg-black/90 backdrop-blur-md border border-neon-red/30 rounded-lg shadow-xl overflow-hidden">
+                      <div className="py-2">
+                        <div className="px-4 py-2 border-b border-neon-red/20">
+                          <p className="text-sm text-white/60 font-rajdhani">Welcome back!</p>
+                          <p className="text-sm text-neon-red font-rajdhani font-semibold">{user?.username || user?.email?.split('@')[0]}</p>
+                        </div>
+                        <Link
+                          href="/dashboard"
+                          className="block px-4 py-2 text-sm text-white hover:text-neon-red hover:bg-neon-red/10 transition-all duration-200 font-rajdhani"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          Dashboard
+                        </Link>
+                        <Link
+                          href="/dashboard/profile"
+                          className="block px-4 py-2 text-sm text-white hover:text-neon-red hover:bg-neon-red/10 transition-all duration-200 font-rajdhani"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          Profile
+                        </Link>
+                        <Link
+                          href="/dashboard/tournaments"
+                          className="block px-4 py-2 text-sm text-white hover:text-neon-red hover:bg-neon-red/10 transition-all duration-200 font-rajdhani"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          My Tournaments
+                        </Link>
+                        {user?.role === 'admin' && (
+                          <Link
+                            href="/admin-dashboard"
+                            className="block px-4 py-2 text-sm text-white hover:text-neon-red hover:bg-neon-red/10 transition-all duration-200 font-rajdhani"
+                            onClick={() => setShowUserMenu(false)}
+                          >
+                            Admin Panel
+                          </Link>
+                        )}
+                        <div className="border-t border-neon-red/20 mt-2">
+                          <button
+                            onClick={handleLogout}
+                            className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-200 font-rajdhani"
+                          >
+                            Logout
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                // Not Logged In State
+                <div className="flex items-center space-x-3">
+                  <Link 
+                    href="/login" 
+                    className="text-white hover:text-neon-red transition-all duration-300 px-4 py-2 font-rajdhani font-semibold"
+                  >
+                    LOGIN
+                  </Link>
+                  <Link 
+                    href="/register" 
+                    className="neon-button relative overflow-hidden rounded-lg"
+                  >
+                    <span className="relative z-10">SIGN UP</span>
+                  </Link>
+                </div>
+              )}
             </div>
             
             {/* Mobile menu button */}
@@ -131,7 +232,6 @@ export default function ModernNavbar() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-black/95 backdrop-blur-lg z-40 lg:hidden">
-          {/* Background pattern */}
           <div className="absolute inset-0 bg-gradient-to-br from-neon-red/10 to-transparent">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,0,64,0.1),transparent_70%)]"></div>
           </div>
@@ -154,14 +254,44 @@ export default function ModernNavbar() {
                 </div>
               ))}
               
-              <div className="mt-6">
-                <Link 
-                  href="/login" 
-                  className="block bg-neon-red/10 text-neon-red border border-neon-red/50 hover:bg-neon-red/20 transition-all duration-300 text-lg px-8 py-4 rounded-lg font-rajdhani font-semibold tracking-wider text-center"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  LOGIN
-                </Link>
+              <div className="mt-6 space-y-3">
+                {isAuthenticated ? (
+                  <>
+                    <Link 
+                      href="/dashboard" 
+                      className="block bg-neon-red/10 text-neon-red border border-neon-red/50 hover:bg-neon-red/20 transition-all duration-300 text-lg px-8 py-4 rounded-lg font-rajdhani font-semibold tracking-wider text-center"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      MY PROFILE
+                    </Link>
+                    <button 
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="block w-full bg-red-500/10 text-red-400 border border-red-500/50 hover:bg-red-500/20 transition-all duration-300 text-lg px-8 py-4 rounded-lg font-rajdhani font-semibold tracking-wider text-center"
+                    >
+                      LOGOUT
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link 
+                      href="/login" 
+                      className="block bg-transparent text-white border border-neon-red/50 hover:bg-neon-red/10 hover:text-neon-red transition-all duration-300 text-lg px-8 py-4 rounded-lg font-rajdhani font-semibold tracking-wider text-center"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      LOGIN
+                    </Link>
+                    <Link 
+                      href="/register" 
+                      className="block bg-neon-red/10 text-neon-red border border-neon-red/50 hover:bg-neon-red/20 transition-all duration-300 text-lg px-8 py-4 rounded-lg font-rajdhani font-semibold tracking-wider text-center"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      SIGN UP
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

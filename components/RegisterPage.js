@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useAuth } from '../contexts/AuthContext';
 
 // Animation variants
 const containerVariants = {
@@ -75,6 +76,7 @@ const RegisterForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [shake, setShake] = useState(false);
+  const { login } = useAuth();
 
   // Handle input changes
   const handleChange = (e) => {
@@ -160,19 +162,14 @@ const RegisterForm = () => {
         role: formState.registerType === 'admin' ? 'admin' : 'user'
       };
       
-      // Store user data
-      localStorage.setItem('currentUser', JSON.stringify(userData));
-      localStorage.setItem('isLoggedIn', 'true');
+      // Use AuthContext login method
+      login(userData);
       
       setIsSuccess(true);
       
-      // Redirect after success
+      // Redirect to HOME PAGE after success (like theesports.club)
       setTimeout(() => {
-        if (formState.registerType === 'admin') {
-          window.location.href = '/admin-dashboard';
-        } else {
-          window.location.href = '/dashboard';
-        }
+        window.location.href = '/';
       }, 2000);
       
     } catch (error) {
